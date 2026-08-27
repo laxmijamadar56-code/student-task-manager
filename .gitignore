@@ -1,0 +1,9 @@
+node_modules/
+dist/
+target/
+.env
+*.log
+.idea/
+.vscode/
+backend/student-task-manager/src/main/resources/application.properties
+backend/student-task-manager/error.txt
