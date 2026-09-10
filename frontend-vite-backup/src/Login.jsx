@@ -1,73 +1,94 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
-  const handleLogin = async (e) => {
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
     e.preventDefault();
-    setMessage("");
 
-    try {
-      const response = await fetch("http://127.0.0.1:8081/students/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-
-      if (response.ok) {
-        const student = await response.json();
-
-        localStorage.setItem("student", JSON.stringify(student));
-
-        setMessage("✅ Login successful!");
-
-        // Go to dashboard
-        window.location.href = "/dashboard";
-      } else {
-        setMessage("❌ Login failed. Check email and password.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      setMessage("❌ Cannot connect to backend.");
+    if (!email || !password) {
+      alert("Please enter email and password");
+      return;
     }
+
+    navigate("/dashboard");
   };
 
   return (
-    <div>
-      <h2>🔐 Student Login</h2>
+    <div className="login-page">
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+      <div className="login-card">
 
-        <br /><br />
+        {/* Logo */}
+        <div className="login-logo">
+          🎓
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        {/* Title */}
+        <h1 className="login-title">
+          Student Task Manager
+        </h1>
 
-        <br /><br />
+        <p className="login-subtitle">
+          🔐 Login to manage your tasks
+        </p>
 
-        <button type="submit">🔐 Login</button>
-      </form>
+        {/* Login Form */}
+        <form onSubmit={handleLogin}>
 
-      {message && <p>{message}</p>}
+          <div className="login-form-group">
+            <label>📧 Email</label>
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="login-form-group">
+            <label>🔑 Password</label>
+
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="login-button"
+          >
+            🔐 Login
+          </button>
+
+        </form>
+
+        {/* Register */}
+        <div className="register-section">
+          <p>Don't have an account?</p>
+
+          <Link to="/register">
+            📝 Create Account
+          </Link>
+        </div>
+
+        {/* Admin */}
+        <div className="admin-section">
+          <Link to="/admin-login">
+            👨‍💼 Admin Login
+          </Link>
+        </div>
+
+      </div>
+
     </div>
   );
 }

@@ -1,104 +1,329 @@
-* {
-  box-sizing: border-box;
+/* =========================================
+   🎓 STUDENT TASK MANAGER
+   PROFESSIONAL COLOR THEME
+========================================= */
+
+:root {
+  --primary: #0F5132;        /* Deep Green */
+  --primary-dark: #083B25;
+
+  --pink: #D94F7D;           /* Rose Pink */
+  --pink-dark: #B83B65;
+
+  --blue: #3B82F6;           /* Action Blue */
+  --blue-dark: #2563EB;
+
+  --success: #198754;
+  --danger: #DC3545;
+  --warning: #F59E0B;
+
+  --background: #F7F9F8;
+  --white: #FFFFFF;
+
+  --text: #24352C;
+  --muted: #718096;
+
+  --border: #DDE8E2;
+
+  --shadow: 0 8px 25px rgba(15, 81, 50, 0.10);
 }
+
+/* =========================================
+   🌿 BODY
+========================================= */
 
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f4f7fb;
-  color: #222;
+  background: var(--background);
+  color: var(--text);
 }
 
-.app {
-  min-height: 100vh;
+
+/* =========================================
+   🎓 HEADINGS
+========================================= */
+
+h1,
+h2,
+h3 {
+  color: var(--primary);
 }
 
-.header {
-  background: #1f4e79;
-  color: white;
-  padding: 20px;
-  text-align: center;
+
+/* =========================================
+   🟢 MAIN BUTTON
+   Add Task / Login / Save
+========================================= */
+
+.primary-btn,
+.add-task-btn,
+.login-button,
+.save-btn {
+  background: var(--primary) !important;
+  color: white !important;
+
+  border: none;
+  border-radius: 10px;
+
+  padding: 12px 20px;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: 0.2s;
 }
 
-.container {
-  width: 92%;
-  max-width: 1000px;
-  margin: 25px auto;
+.primary-btn:hover,
+.add-task-btn:hover,
+.login-button:hover,
+.save-btn:hover {
+  background: var(--primary-dark) !important;
+  transform: translateY(-1px);
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+
+/* =========================================
+   🔵 EDIT BUTTON
+========================================= */
+
+.edit-btn {
+  background: var(--blue) !important;
+  color: white !important;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 9px 15px;
+
+  font-weight: 700;
+  cursor: pointer;
 }
+
+.edit-btn:hover {
+  background: var(--blue-dark) !important;
+}
+
+
+/* =========================================
+   🔴 DELETE BUTTON
+========================================= */
+
+.delete-btn {
+  background: var(--danger) !important;
+  color: white !important;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 9px 15px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #B02A37 !important;
+}
+
+
+/* =========================================
+   🟡 STATUS BUTTON
+========================================= */
+
+.status-btn {
+  background: var(--warning) !important;
+  color: white !important;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 9px 15px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.status-btn:hover {
+  background: #D97706 !important;
+}
+
+
+/* =========================================
+   💗 SPECIAL / ADMIN BUTTON
+========================================= */
+
+.admin-btn,
+.admin-login-btn {
+  background: var(--pink) !important;
+  color: white !important;
+
+  border: none;
+  border-radius: 10px;
+
+  padding: 11px 18px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-btn:hover,
+.admin-login-btn:hover {
+  background: var(--pink-dark) !important;
+}
+
+
+/* =========================================
+   🚪 LOGOUT
+========================================= */
+
+.logout-btn,
+.logout-button {
+  background: var(--pink) !important;
+  color: white !important;
+
+  border: none;
+  border-radius: 9px;
+
+  padding: 10px 17px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-btn:hover,
+.logout-button:hover {
+  background: var(--pink-dark) !important;
+}
+
+
+/* =========================================
+   💚 CARDS
+========================================= */
+
+.card,
+.dashboard-card,
+.task-card,
+.form-card,
+.login-card,
+.admin-card {
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  box-shadow: var(--shadow);
+}
+
+
+/* =========================================
+   🌿 INPUTS
+========================================= */
 
 input,
 textarea,
 select {
   width: 100%;
-  padding: 11px;
-  margin: 8px 0 14px;
-  border: 1px solid #ccc;
-  border-radius: 7px;
-  font-size: 15px;
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  background: white;
+
+  color: var(--text);
+
+  outline: none;
 }
 
-textarea {
-  min-height: 90px;
-  resize: vertical;
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+
+  box-shadow:
+    0 0 0 3px rgba(15, 81, 50, 0.10);
 }
 
-button {
-  border: none;
-  border-radius: 7px;
-  padding: 10px 16px;
-  margin: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  background: #1f4e79;
+
+/* =========================================
+   💚 TABLE HEADER
+========================================= */
+
+th {
+  background: var(--primary);
   color: white;
+
+  padding: 13px;
 }
 
-button:hover {
-  opacity: 0.9;
+td {
+  padding: 12px;
+
+  border-bottom: 1px solid var(--border);
 }
 
-.logout {
-  background: #c62828;
+tr:hover {
+  background: #FDF7F9;
 }
 
-.task {
-  border-left: 5px solid #1f4e79;
-  padding: 15px;
-  margin: 12px 0;
-  background: #fafafa;
-  border-radius: 8px;
+
+/* =========================================
+   🟡 STATUS BADGES
+========================================= */
+
+.status-pending {
+  background: #FFF3CD;
+  color: #856404;
 }
 
-.success {
-  color: green;
-  font-weight: bold;
+.status-in-progress {
+  background: #E8F1FF;
+  color: #2563EB;
 }
 
-.error {
-  color: red;
-  font-weight: bold;
+.status-completed {
+  background: #D1E7DD;
+  color: #146C43;
 }
 
-.student {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+
+/* =========================================
+   💗 LINKS
+========================================= */
+
+a {
+  color: var(--pink);
+  font-weight: 700;
+  text-decoration: none;
 }
+
+a:hover {
+  color: var(--pink-dark);
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   📱 MOBILE
+========================================= */
 
 @media (max-width: 600px) {
-  .container {
-    width: 96%;
+
+  .edit-btn,
+  .delete-btn,
+  .status-btn {
+    padding: 8px 11px;
+    font-size: 13px;
   }
 
-  button {
+  .primary-btn,
+  .add-task-btn,
+  .login-button {
     width: 100%;
-    margin: 5px 0;
   }
 }
