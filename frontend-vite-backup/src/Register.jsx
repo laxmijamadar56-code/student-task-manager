@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
@@ -8,76 +8,83 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (name && email && password) {
-      alert("Student Registration Successful!");
-      navigate("/");
-    } else {
+    if (!name || !email || !password) {
       alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/students", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Student Registration Successful!");
+        navigate("/");
+      } else {
+        alert("Registration failed!");
+      }
+    } catch (error) {
+      console.error("Registration Error:", error);
+      alert("Cannot connect to Spring Boot backend");
     }
   };
 
   return (
     <div>
-      <h1>🎓 Student Task Manager</h1>
-
-      <h2>📝 Register Student</h2>
+      <h1>Student Registration</h1>
 
       <form onSubmit={handleRegister}>
-        <label>Name</label>
-        <br />
+        <div>
+          <label>Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+          />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Enter Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <div>
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+        </div>
 
-        <br />
-        <br />
+        <div>
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+          />
+        </div>
 
-        <label>Email</label>
-        <br />
-
-        <input
-          type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <br />
-        <br />
-
-        <label>Password</label>
-        <br />
-
-        <input
-          type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <br />
-        <br />
-
-        <button type="submit">
-          📝 Register
-        </button>
+        <button type="submit">REGISTER</button>
       </form>
 
-      <br />
-
-      <button onClick={() => navigate("/")}>
-        ← Back to Login
-      </button>
+      <p>
+        Already have an account?{" "}
+        <button type="button" onClick={() => navigate("/")}>
+          Login
+        </button>
+      </p>
     </div>
   );
 }

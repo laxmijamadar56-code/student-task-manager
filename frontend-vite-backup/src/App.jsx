@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./Login";
@@ -6,10 +7,9 @@ import Dashboard from "./Dashboard";
 import AddTask from "./AddTask";
 import TaskList from "./TaskList";
 import EditTask from "./EditTask";
+
 import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
-
-import "./App.css";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route path="/edit-task/:id" element={<EditTask />} />
 
         <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

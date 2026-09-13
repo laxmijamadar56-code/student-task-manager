@@ -12,7 +12,7 @@ function TaskList() {
   // LOAD TASKS
   // =========================
   const loadTasks = () => {
-    fetch("http://localhost:8081/tasks")
+    fetch("http://localhost:8080/tasks")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch tasks");
@@ -48,7 +48,7 @@ function TaskList() {
 
     try {
       const response = await fetch(
-        `http://localhost:8081/tasks/${id}`,
+        `http://localhost:8080/tasks/${id}`,
         {
           method: "DELETE",
         }

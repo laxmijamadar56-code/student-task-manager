@@ -1,57 +1,64 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./AdminDashboard.css";
 
 function AdminDashboard() {
+  const navigate = useNavigate();
+
   const [students, setStudents] = useState([]);
   const [tasks, setTasks] = useState([]);
 
-  const [studentSearch, setStudentSearch] = useState("");
-  const [taskSearch, setTaskSearch] = useState("");
+  const [searchStudent, setSearchStudent] = useState("");
+  const [searchTask, setSearchTask] = useState("");
 
-  const [loading, setLoading] = useState(true);
+  const API = "http://localhost:8080";
 
-  // ==============================
-  // FETCH STUDENTS AND TASKS
-  // ==============================
+  useEffect(() => {
+    const adminLoggedIn = localStorage.getItem("adminLoggedIn");
 
-  const fetchData = async () => {
+    if (adminLoggedIn !== "true") {
+      navigate("/admin-login");
+      return;
+    }
+
+    loadStudents();
+    loadTasks();
+  }, [navigate]);
+
+  // Load students
+  const loadStudents = async () => {
     try {
-      const studentResponse = await fetch(
-        "http://localhost:8081/students"
-      );
+      const response = await fetch(`${API}/students`);
 
-      const taskResponse = await fetch(
-        "http://localhost:8081/tasks"
-      );
-
-      if (!studentResponse.ok || !taskResponse.ok) {
-        throw new Error("Failed to fetch data");
+      if (!response.ok) {
+        throw new Error("Failed to load students");
       }
 
-      const studentData = await studentResponse.json();
-      const taskData = await taskResponse.json();
-
-      setStudents(studentData);
-      setTasks(taskData);
-
+      const data = await response.json();
+      setStudents(data);
     } catch (error) {
-      console.error(error);
-      alert("Cannot connect to Spring Boot backend.");
-    } finally {
-      setLoading(false);
+      console.error("Student loading error:", error);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // Load tasks
+  const loadTasks = async () => {
+    try {
+      const response = await fetch(`${API}/tasks`);
 
+      if (!response.ok) {
+        throw new Error("Failed to load tasks");
+      }
 
-  // ==============================
-  // DELETE STUDENT
-  // ==============================
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error("Task loading error:", error);
+    }
+  };
 
+  // Delete student
   const deleteStudent = async (id) => {
-
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this student?"
     );
@@ -61,38 +68,27 @@ function AdminDashboard() {
     }
 
     try {
+      const response = await fetch(`${API}/students/${id}`, {
+        method: "DELETE",
+      });
 
-      const response = await fetch(
-        `http://localhost:8081/students/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      if (response.ok) {
+        setStudents(
+          students.filter((student) => student.id !== id)
+        );
 
-      if (!response.ok) {
-        throw new Error("Failed to delete student");
+        alert("Student deleted successfully");
+      } else {
+        alert("Unable to delete student");
       }
-
-      alert("Student deleted successfully.");
-
-      fetchData();
-
     } catch (error) {
-
-      console.error(error);
-
-      alert("Unable to delete student.");
-
+      console.error("Delete student error:", error);
+      alert("Backend connection failed");
     }
   };
 
-
-  // ==============================
-  // DELETE TASK
-  // ==============================
-
+  // Delete task
   const deleteTask = async (id) => {
-
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this task?"
     );
@@ -102,448 +98,262 @@ function AdminDashboard() {
     }
 
     try {
+      const response = await fetch(`${API}/tasks/${id}`, {
+        method: "DELETE",
+      });
 
-      const response = await fetch(
-        `http://localhost:8081/tasks/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      if (response.ok) {
+        setTasks(
+          tasks.filter((task) => task.id !== id)
+        );
 
-      if (!response.ok) {
-        throw new Error("Failed to delete task");
+        alert("Task deleted successfully");
+      } else {
+        alert("Unable to delete task");
       }
-
-      alert("Task deleted successfully.");
-
-      fetchData();
-
     } catch (error) {
-
-      console.error(error);
-
-      alert("Unable to delete task.");
-
+      console.error("Delete task error:", error);
+      alert("Backend connection failed");
     }
   };
 
-
-  // ==============================
-  // VIEW STUDENT
-  // ==============================
-
-  const viewStudent = (student) => {
-
-    alert(
-      `Student Details\n\n` +
-      `ID: ${student.id}\n` +
-      `Name: ${student.name}\n` +
-      `Email: ${student.email}`
-    );
-
-  };
-
-
-  // ==============================
-  // VIEW TASK
-  // ==============================
-
-  const viewTask = (task) => {
-
-    alert(
-      `Task Details\n\n` +
-      `ID: ${task.id}\n` +
-      `Title: ${task.title}\n` +
-      `Description: ${task.description}\n` +
-      `Due Date: ${task.dueDate}\n` +
-      `Priority: ${task.priority}\n` +
-      `Status: ${task.status}`
-    );
-
-  };
-
-
-  // ==============================
-  // EDIT STUDENT
-  // ==============================
-
-  const editStudent = (student) => {
-
-    const newName = window.prompt(
-      "Enter new student name:",
-      student.name
-    );
-
-    if (newName === null || newName.trim() === "") {
-      return;
-    }
-
-    const newEmail = window.prompt(
-      "Enter new student email:",
-      student.email
-    );
-
-    if (newEmail === null || newEmail.trim() === "") {
-      return;
-    }
-
-    updateStudent(
-      student.id,
-      newName.trim(),
-      newEmail.trim()
-    );
-
-  };
-
-
-  // ==============================
-  // UPDATE STUDENT
-  // ==============================
-
-  const updateStudent = async (
-    id,
-    name,
-    email
-  ) => {
-
-    try {
-
-      const response = await fetch(
-        `http://localhost:8081/students/${id}`,
-        {
-          method: "PUT",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify({
-            name: name,
-            email: email,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Student update failed");
-      }
-
-      alert("Student updated successfully.");
-
-      fetchData();
-
-    } catch (error) {
-
-      console.error(error);
-
-      alert(
-        "Student update failed.\n\n" +
-        "If your Spring Boot backend does not have PUT /students/{id}, " +
-        "this button will need a backend update endpoint."
-      );
-
-    }
-  };
-
-
-  // ==============================
-  // EDIT TASK
-  // ==============================
-
-  const editTask = (task) => {
-
-    window.location.href = `/edit-task/${task.id}`;
-
-  };
-
-
-  // ==============================
-  // LOGOUT
-  // ==============================
-
+  // Logout
   const logout = () => {
-
-    const confirmLogout = window.confirm(
-      "Are you sure you want to logout?"
-    );
-
-    if (confirmLogout) {
-
-      window.location.href = "/";
-
-    }
-
+    localStorage.removeItem("adminLoggedIn");
+    navigate("/admin-login");
   };
 
+  // Search students
+  const filteredStudents = students.filter((student) =>
+    `${student.name} ${student.email}`
+      .toLowerCase()
+      .includes(searchStudent.toLowerCase())
+  );
 
-  // ==============================
-  // SEARCH STUDENTS
-  // ==============================
+  // Search tasks
+  const filteredTasks = tasks.filter((task) =>
+    `${task.title} ${task.description}`
+      .toLowerCase()
+      .includes(searchTask.toLowerCase())
+  );
 
-  const filteredStudents = students.filter((student) => {
-
-    const search = studentSearch.toLowerCase();
-
-    return (
-      String(student.id)
-        .toLowerCase()
-        .includes(search) ||
-
-      student.name
-        ?.toLowerCase()
-        .includes(search) ||
-
-      student.email
-        ?.toLowerCase()
-        .includes(search)
-    );
-
-  });
-
-
-  // ==============================
-  // SEARCH TASKS
-  // ==============================
-
-  const filteredTasks = tasks.filter((task) => {
-
-    const search = taskSearch.toLowerCase();
-
-    return (
-      String(task.id)
-        .toLowerCase()
-        .includes(search) ||
-
-      task.title
-        ?.toLowerCase()
-        .includes(search) ||
-
-      task.description
-        ?.toLowerCase()
-        .includes(search) ||
-
-      task.priority
-        ?.toLowerCase()
-        .includes(search) ||
-
-      task.status
-        ?.toLowerCase()
-        .includes(search)
-    );
-
-  });
-
-
-  // ==============================
-  // TASK COUNTS
-  // ==============================
+  // Task counts
+  const pendingTasks = tasks.filter(
+    (task) =>
+      task.status?.toUpperCase() === "PENDING"
+  ).length;
 
   const completedTasks = tasks.filter(
     (task) =>
       task.status?.toUpperCase() === "COMPLETED"
   ).length;
 
-  const pendingTasks = tasks.filter(
-    (task) =>
-      task.status?.toUpperCase() === "PENDING"
-  ).length;
-
-
-  // ==============================
-  // LOADING
-  // ==============================
-
-  if (loading) {
-
-    return (
-      <div className="admin-dashboard">
-
-        <h2>Loading Admin Dashboard...</h2>
-
-      </div>
-    );
-
-  }
-
-
-  // ==============================
-  // UI
-  // ==============================
-
   return (
+    <div className="admin-container">
 
-    <div className="admin-dashboard">
+      {/* SIDEBAR */}
+      <aside className="admin-sidebar">
 
-      {/* ==========================
-          HEADER
-      ========================== */}
+        <div className="admin-brand">
+          <div className="brand-icon">🎓</div>
 
-      <div className="dashboard-header">
+          <div>
+            <h2>Task Manager</h2>
+            <span>ADMIN PANEL</span>
+          </div>
+        </div>
 
-        <h1>
-          🎓 Student Task Manager
-        </h1>
+        <nav>
 
-        <h2>
-          👨‍💼 Admin Dashboard
-        </h2>
+          <button
+            className="active"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
+          >
+            📊 Dashboard
+          </button>
+
+          <button
+            onClick={() =>
+              document
+                .getElementById("students-section")
+                ?.scrollIntoView({
+                  behavior: "smooth",
+                })
+            }
+          >
+            👥 Students
+          </button>
+
+          <button
+            onClick={() =>
+              document
+                .getElementById("tasks-section")
+                ?.scrollIntoView({
+                  behavior: "smooth",
+                })
+            }
+          >
+            📋 Tasks
+          </button>
+
+        </nav>
 
         <button
-          className="logout-btn"
+          className="logout-button"
           onClick={logout}
         >
           🚪 Logout
         </button>
 
-      </div>
+      </aside>
 
 
-      {/* ==========================
-          SUMMARY
-      ========================== */}
+      {/* MAIN CONTENT */}
+      <main className="admin-main">
 
-      <div className="admin-summary">
+        {/* HEADER */}
+        <header className="admin-header">
 
-        <div className="dashboard-card">
+          <div>
+            <h1>Admin Dashboard</h1>
 
-          <h3>
-            👨‍🎓 Students
-          </h3>
+            <p>
+              Welcome back, Administrator 👋
+            </p>
+          </div>
 
-          <h2>
-            {students.length}
-          </h2>
+          <div className="admin-profile">
+            👨‍💼
+            <span>Administrator</span>
+          </div>
 
-          <p>
-            Total Students
-          </p>
-
-        </div>
-
-
-        <div className="dashboard-card">
-
-          <h3>
-            📝 Tasks
-          </h3>
-
-          <h2>
-            {tasks.length}
-          </h2>
-
-          <p>
-            Total Tasks
-          </p>
-
-        </div>
+        </header>
 
 
-        <div className="dashboard-card">
+        {/* DASHBOARD CARDS */}
+        <section className="stats-grid">
 
-          <h3>
-            ⏳ Pending
-          </h3>
+          <div className="stat-card">
 
-          <h2>
-            {pendingTasks}
-          </h2>
+            <div className="stat-icon">
+              👥
+            </div>
 
-          <p>
-            Pending Tasks
-          </p>
+            <div>
+              <span>Total Students</span>
+              <h2>{students.length}</h2>
+            </div>
 
-        </div>
-
-
-        <div className="dashboard-card">
-
-          <h3>
-            ✅ Completed
-          </h3>
-
-          <h2>
-            {completedTasks}
-          </h2>
-
-          <p>
-            Completed Tasks
-          </p>
-
-        </div>
-
-      </div>
+          </div>
 
 
-      {/* ==========================
-          STUDENTS
-      ========================== */}
+          <div className="stat-card">
 
-      <div className="admin-section">
+            <div className="stat-icon">
+              📋
+            </div>
 
-        <div className="section-header">
+            <div>
+              <span>Total Tasks</span>
+              <h2>{tasks.length}</h2>
+            </div>
 
-          <h2>
-            👨‍🎓 Students
-          </h2>
-
-          <h3>
-            Total Students: {students.length}
-          </h3>
-
-        </div>
+          </div>
 
 
-        {/* Student Search */}
+          <div className="stat-card">
 
-        <div className="search-box">
+            <div className="stat-icon">
+              ⏳
+            </div>
 
-          <input
-            type="text"
-            placeholder="🔍 Search student by ID, name or email..."
-            value={studentSearch}
-            onChange={(e) =>
-              setStudentSearch(e.target.value)
-            }
-          />
+            <div>
+              <span>Pending Tasks</span>
+              <h2>{pendingTasks}</h2>
+            </div>
 
-        </div>
+          </div>
 
 
-        <div className="table-container">
+          <div className="stat-card">
 
-          <table>
+            <div className="stat-icon">
+              ✅
+            </div>
 
-            <thead>
+            <div>
+              <span>Completed Tasks</span>
+              <h2>{completedTasks}</h2>
+            </div>
 
-              <tr>
+          </div>
 
-                <th>ID</th>
-
-                <th>Name</th>
-
-                <th>Email</th>
-
-                <th>Action</th>
-
-              </tr>
-
-            </thead>
+        </section>
 
 
-            <tbody>
+        {/* STUDENTS TABLE */}
+        <section
+          className="admin-section"
+          id="students-section"
+        >
 
-              {filteredStudents.length > 0 ? (
+          <div className="section-header">
 
-                filteredStudents.map((student) => (
+            <div>
+              <h2>
+                👥 Student Management
+              </h2>
+
+              <p>
+                View and manage registered students
+              </p>
+            </div>
+
+            <input
+              type="text"
+              placeholder="🔍 Search students..."
+              value={searchStudent}
+              onChange={(e) =>
+                setSearchStudent(e.target.value)
+              }
+            />
+
+          </div>
+
+
+          <div className="table-container">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+
+              <tbody>
+
+                {filteredStudents.map((student) => (
 
                   <tr key={student.id}>
 
                     <td>
-                      {student.id}
+                      #{student.id}
                     </td>
 
                     <td>
-                      {student.name}
+                      <strong>
+                        {student.name}
+                      </strong>
                     </td>
 
                     <td>
@@ -553,137 +363,99 @@ function AdminDashboard() {
                     <td>
 
                       <button
-                        className="view-btn"
-                        onClick={() =>
-                          viewStudent(student)
-                        }
-                      >
-                        👁️ View
-                      </button>
-
-
-                      <button
-                        className="edit-btn"
-                        onClick={() =>
-                          editStudent(student)
-                        }
-                      >
-                        ✏️ Edit
-                      </button>
-
-
-                      <button
                         className="delete-btn"
                         onClick={() =>
                           deleteStudent(student.id)
                         }
                       >
-                        🗑️ Delete
+                        🗑 Delete
                       </button>
 
                     </td>
 
                   </tr>
 
-                ))
+                ))}
 
-              ) : (
+              </tbody>
+
+            </table>
+
+
+            {filteredStudents.length === 0 && (
+              <p className="empty-message">
+                No students found.
+              </p>
+            )}
+
+          </div>
+
+        </section>
+
+
+        {/* TASKS TABLE */}
+        <section
+          className="admin-section"
+          id="tasks-section"
+        >
+
+          <div className="section-header">
+
+            <div>
+              <h2>
+                📋 Task Management
+              </h2>
+
+              <p>
+                Monitor and manage all student tasks
+              </p>
+            </div>
+
+            <input
+              type="text"
+              placeholder="🔍 Search tasks..."
+              value={searchTask}
+              onChange={(e) =>
+                setSearchTask(e.target.value)
+              }
+            />
+
+          </div>
+
+
+          <div className="table-container">
+
+            <table>
+
+              <thead>
 
                 <tr>
-
-                  <td colSpan="4">
-                    No students found.
-                  </td>
-
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Due Date</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
 
-              )}
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
+              </thead>
 
 
-      {/* ==========================
-          TASKS
-      ========================== */}
+              <tbody>
 
-      <div className="admin-section">
-
-        <div className="section-header">
-
-          <h2>
-            📝 All Tasks
-          </h2>
-
-          <h3>
-            Total Tasks: {tasks.length}
-          </h3>
-
-        </div>
-
-
-        {/* Task Search */}
-
-        <div className="search-box">
-
-          <input
-            type="text"
-            placeholder="🔍 Search task by ID, title, description..."
-            value={taskSearch}
-            onChange={(e) =>
-              setTaskSearch(e.target.value)
-            }
-          />
-
-        </div>
-
-
-        <div className="table-container">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>ID</th>
-
-                <th>Title</th>
-
-                <th>Description</th>
-
-                <th>Due Date</th>
-
-                <th>Priority</th>
-
-                <th>Status</th>
-
-                <th>Action</th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {filteredTasks.length > 0 ? (
-
-                filteredTasks.map((task) => (
+                {filteredTasks.map((task) => (
 
                   <tr key={task.id}>
 
                     <td>
-                      {task.id}
+                      #{task.id}
                     </td>
 
                     <td>
-                      {task.title}
+                      <strong>
+                        {task.title}
+                      </strong>
                     </td>
 
                     <td>
@@ -695,34 +467,29 @@ function AdminDashboard() {
                     </td>
 
                     <td>
-                      {task.priority}
+
+                      <span className="priority-badge">
+                        {task.priority}
+                      </span>
+
                     </td>
 
                     <td>
-                      {task.status}
+
+                      <span
+                        className={
+                          task.status?.toUpperCase() ===
+                          "COMPLETED"
+                            ? "status completed"
+                            : "status pending"
+                        }
+                      >
+                        {task.status}
+                      </span>
+
                     </td>
 
                     <td>
-
-                      <button
-                        className="view-btn"
-                        onClick={() =>
-                          viewTask(task)
-                        }
-                      >
-                        👁️ View
-                      </button>
-
-
-                      <button
-                        className="edit-btn"
-                        onClick={() =>
-                          editTask(task)
-                        }
-                      >
-                        ✏️ Edit
-                      </button>
-
 
                       <button
                         className="delete-btn"
@@ -730,39 +497,34 @@ function AdminDashboard() {
                           deleteTask(task.id)
                         }
                       >
-                        🗑️ Delete
+                        🗑 Delete
                       </button>
 
                     </td>
 
                   </tr>
 
-                ))
+                ))}
 
-              ) : (
+              </tbody>
 
-                <tr>
+            </table>
 
-                  <td colSpan="7">
-                    No tasks found.
-                  </td>
 
-                </tr>
+            {filteredTasks.length === 0 && (
+              <p className="empty-message">
+                No tasks found.
+              </p>
+            )}
 
-              )}
+          </div>
 
-            </tbody>
+        </section>
 
-          </table>
-
-        </div>
-
-      </div>
+      </main>
 
     </div>
-
   );
-
 }
 
 export default AdminDashboard;

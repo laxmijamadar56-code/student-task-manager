@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState([]);
 
-  // =========================
-  // LOAD TASKS
-  // =========================
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const loadTasks = () => {
-    fetch("http://localhost:8081/tasks")
+    setLoading(true);
+
+    fetch("http://localhost:8080/tasks")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch tasks");
@@ -21,7 +22,10 @@ function Dashboard() {
       })
       .catch((error) => {
         console.error(error);
-        alert("❌ Cannot connect to Spring Boot backend");
+        alert("Cannot connect to Spring Boot backend");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -29,17 +33,42 @@ function Dashboard() {
     loadTasks();
   }, []);
 
-  // =========================
-  // DELETE TASK
-  // =========================
+  const student = JSON.parse(
+    localStorage.getItem("student") || "{}"
+  );
+
+  const studentName = student.name || "Student";
+
+  const pendingTasks = tasks.filter(
+    (task) => task.status?.toUpperCase() === "PENDING"
+  );
+
+  const inProgressTasks = tasks.filter(
+    (task) =>
+      task.status?.toUpperCase() === "IN_PROGRESS" ||
+      task.status?.toUpperCase() === "IN PROGRESS"
+  );
+
+  const completedTasks = tasks.filter(
+    (task) => task.status?.toUpperCase() === "COMPLETED"
+  );
+
+  const progress = useMemo(() => {
+    if (tasks.length === 0) return 0;
+
+    return Math.round(
+      (completedTasks.length / tasks.length) * 100
+    );
+  }, [tasks, completedTasks.length]);
+
   const deleteTask = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this task?")) {
+    if (!window.confirm("Delete this task?")) {
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:8081/tasks/${id}`,
+        `http://localhost:8080/tasks/${id}`,
         {
           method: "DELETE",
         }
@@ -49,23 +78,22 @@ function Dashboard() {
         throw new Error("Delete failed");
       }
 
-      alert("✅ Task deleted successfully!");
       loadTasks();
     } catch (error) {
       console.error(error);
-      alert("❌ Failed to delete task");
+      alert("Failed to delete task");
     }
   };
 
-  // =========================
-  // CHANGE STATUS
-  // =========================
   const changeStatus = async (task) => {
+    const currentStatus =
+      task.status?.toUpperCase() || "PENDING";
+
     let newStatus;
 
-    if (task.status === "PENDING") {
+    if (currentStatus === "PENDING") {
       newStatus = "IN_PROGRESS";
-    } else if (task.status === "IN_PROGRESS") {
+    } else if (currentStatus === "IN_PROGRESS") {
       newStatus = "COMPLETED";
     } else {
       newStatus = "PENDING";
@@ -73,7 +101,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:8081/tasks/${task.id}`,
+        `http://localhost:8080/tasks/${task.id}`,
         {
           method: "PUT",
           headers: {
@@ -96,277 +124,362 @@ function Dashboard() {
       loadTasks();
     } catch (error) {
       console.error(error);
-      alert("❌ Failed to update status");
+      alert("Failed to update status");
     }
   };
 
-  // =========================
-  // STATUS TEXT
-  // =========================
-  const getStatusButton = (status) => {
-    if (status === "COMPLETED") {
-      return "🟢 COMPLETED";
-    }
+  const getStatus = (status) => {
+    const value = status?.toUpperCase();
 
-    if (status === "IN_PROGRESS") {
-      return "🔵 IN PROGRESS";
-    }
-
-    return "🟡 PENDING";
-  };
-
-  // =========================
-  // STATUS COLOR
-  // =========================
-  const getStatusStyle = (status) => {
-    if (status === "COMPLETED") {
+    if (value === "COMPLETED") {
       return {
-        backgroundColor: "#90EE90",
-        color: "#14532D",
+        text: "Completed",
+        className: "status-completed",
+        icon: "✓",
       };
     }
 
-    if (status === "IN_PROGRESS") {
+    if (
+      value === "IN_PROGRESS" ||
+      value === "IN PROGRESS"
+    ) {
       return {
-        backgroundColor: "#87CEEB",
-        color: "#075985",
+        text: "In Progress",
+        className: "status-progress",
+        icon: "◐",
       };
     }
 
     return {
-      backgroundColor: "#FFE082",
-      color: "#854D0E",
+      text: "Pending",
+      className: "status-pending",
+      icon: "○",
     };
   };
 
+  const getPriority = (priority) => {
+    const value = priority?.toUpperCase();
+
+    if (value === "HIGH") {
+      return {
+        text: "High",
+        className: "priority-high",
+      };
+    }
+
+    if (value === "LOW") {
+      return {
+        text: "Low",
+        className: "priority-low",
+      };
+    }
+
+    return {
+      text: "Medium",
+      className: "priority-medium",
+    };
+  };
+
+  const logout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("student");
+    navigate("/");
+  };
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#F8FBFF",
-        padding: "30px",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      {/* HEADER */}
-      <div
-        style={{
-          backgroundColor: "#87CEEB",
-          padding: "25px",
-          borderRadius: "15px",
-          textAlign: "center",
-          marginBottom: "25px",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-        }}
-      >
-        <h1
-          style={{
-            margin: 0,
-            color: "#075985",
-          }}
-        >
-          🎓 Student Task Manager
-        </h1>
+    <div className="student-app">
 
-        <h2
-          style={{
-            marginBottom: 0,
-            color: "#831843",
-          }}
-        >
-          📊 Dashboard
-        </h2>
-      </div>
+      {/* SIDEBAR */}
+      <aside className="student-sidebar">
 
-      {/* TOP BUTTONS */}
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "25px",
-        }}
-      >
-        <button
-          onClick={() => navigate("/add-task")}
-          style={{
-            backgroundColor: "#87CEEB",
-            color: "#075985",
-            border: "none",
-            borderRadius: "8px",
-            padding: "12px 18px",
-            margin: "5px",
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}
-        >
-          ➕ Add Task
-        </button>
+        <div className="student-brand">
+          <div className="brand-logo">✓</div>
 
-        <button
-          onClick={() => navigate("/tasks")}
-          style={{
-            backgroundColor: "#F9A8D4",
-            color: "#831843",
-            border: "none",
-            borderRadius: "8px",
-            padding: "12px 18px",
-            margin: "5px",
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}
-        >
-          📋 Task List
-        </button>
+          <div>
+            <h2>TaskFlow</h2>
+            <span>STUDENT</span>
+          </div>
+        </div>
 
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            backgroundColor: "#F472B6",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            padding: "12px 18px",
-            margin: "5px",
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}
-        >
-          🚪 Logout
-        </button>
-      </div>
+        <nav className="student-nav">
 
-      {/* TASK SECTION */}
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "15px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.10)",
-          overflowX: "auto",
-        }}
-      >
-        <h2
-          style={{
-            color: "#075985",
-            borderBottom: "3px solid #F9A8D4",
-            paddingBottom: "10px",
-          }}
-        >
-          📝 All Tasks
-        </h2>
+          <button className="nav-item active">
+            <span>▦</span>
+            Dashboard
+          </button>
 
-        {tasks.length === 0 ? (
-          <p>No tasks found.</p>
-        ) : (
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              textAlign: "center",
-            }}
+          <button
+            className="nav-item"
+            onClick={() => navigate("/tasks")}
           >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "#87CEEB",
-                  color: "#075985",
-                }}
+            <span>☷</span>
+            My Tasks
+          </button>
+
+          <button
+            className="nav-item"
+            onClick={() => navigate("/add-task")}
+          >
+            <span>＋</span>
+            Add Task
+          </button>
+
+        </nav>
+
+        <div className="sidebar-bottom">
+
+          <div className="sidebar-tip">
+            <div>💡</div>
+            <strong>Stay productive</strong>
+            <p>
+              Keep your tasks organized and complete them on time.
+            </p>
+          </div>
+
+          <button
+            className="logout-nav"
+            onClick={logout}
+          >
+            <span>↪</span>
+            Logout
+          </button>
+
+        </div>
+      </aside>
+
+      {/* MAIN */}
+      <main className="student-main">
+
+        <header className="student-header">
+
+          <div>
+            <p className="eyebrow">STUDENT DASHBOARD</p>
+
+            <h1>
+              Good day, {studentName} 👋
+            </h1>
+
+            <p className="header-subtitle">
+              Here's what's happening with your tasks today.
+            </p>
+          </div>
+
+          <div className="profile-card">
+            <div className="profile-avatar">
+              {studentName.charAt(0).toUpperCase()}
+            </div>
+
+            <div>
+              <strong>{studentName}</strong>
+              <span>{student.email || "Student"}</span>
+            </div>
+          </div>
+
+        </header>
+
+        {/* STATS */}
+        <section className="student-stats">
+
+          <div className="student-stat-card">
+            <div className="stat-symbol blue">☷</div>
+            <div>
+              <span>Total Tasks</span>
+              <strong>{tasks.length}</strong>
+            </div>
+          </div>
+
+          <div className="student-stat-card">
+            <div className="stat-symbol orange">○</div>
+            <div>
+              <span>Pending</span>
+              <strong>{pendingTasks.length}</strong>
+            </div>
+          </div>
+
+          <div className="student-stat-card">
+            <div className="stat-symbol purple">◐</div>
+            <div>
+              <span>In Progress</span>
+              <strong>{inProgressTasks.length}</strong>
+            </div>
+          </div>
+
+          <div className="student-stat-card">
+            <div className="stat-symbol green">✓</div>
+            <div>
+              <span>Completed</span>
+              <strong>{completedTasks.length}</strong>
+            </div>
+          </div>
+
+        </section>
+
+        {/* PROGRESS */}
+        <section className="progress-card">
+
+          <div className="progress-info">
+            <div>
+              <p className="section-label">YOUR PROGRESS</p>
+              <h2>Task completion</h2>
+            </div>
+
+            <strong>{progress}%</strong>
+          </div>
+
+          <div className="progress-track">
+            <div
+              className="progress-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          <p className="progress-text">
+            {completedTasks.length} of {tasks.length} tasks completed
+          </p>
+
+        </section>
+
+        {/* TASKS */}
+        <section className="tasks-card">
+
+          <div className="tasks-card-header">
+
+            <div>
+              <p className="section-label">TASK OVERVIEW</p>
+              <h2>My Tasks</h2>
+            </div>
+
+            <div className="header-actions">
+              <button
+                className="secondary-btn"
+                onClick={() => navigate("/tasks")}
               >
-                <th style={{ padding: "12px" }}>No.</th>
-                <th style={{ padding: "12px" }}>Title</th>
-                <th style={{ padding: "12px" }}>Description</th>
-                <th style={{ padding: "12px" }}>Due Date</th>
-                <th style={{ padding: "12px" }}>Priority</th>
-                <th style={{ padding: "12px" }}>Status</th>
-                <th style={{ padding: "12px" }}>Actions</th>
-              </tr>
-            </thead>
+                View all
+              </button>
 
-            <tbody>
-              {tasks.map((task, index) => (
-                <tr
-                  key={task.id}
-                  style={{
-                    borderBottom: "1px solid #E5E7EB",
-                  }}
-                >
-                  <td style={{ padding: "12px" }}>
-                    {index + 1}
-                  </td>
+              <button
+                className="primary-btn"
+                onClick={() => navigate("/add-task")}
+              >
+                + Add Task
+              </button>
+            </div>
 
-                  <td style={{ padding: "12px", fontWeight: "bold" }}>
-                    {task.title}
-                  </td>
+          </div>
 
-                  <td style={{ padding: "12px" }}>
-                    {task.description}
-                  </td>
+          {loading ? (
+            <div className="empty-state">
+              <div className="empty-icon">⏳</div>
+              <h3>Loading tasks...</h3>
+              <p>Please wait a moment.</p>
+            </div>
+          ) : tasks.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">✓</div>
+              <h3>No tasks yet</h3>
+              <p>Create your first task to get started.</p>
 
-                  <td style={{ padding: "12px" }}>
-                    {task.dueDate}
-                  </td>
+              <button
+                className="primary-btn"
+                onClick={() => navigate("/add-task")}
+              >
+                + Create Task
+              </button>
+            </div>
+          ) : (
+            <div className="task-table-wrapper">
 
-                  <td style={{ padding: "12px" }}>
-                    {task.priority}
-                  </td>
+              <table className="modern-task-table">
 
-                  {/* STATUS */}
-                  <td style={{ padding: "12px" }}>
-                    <button
-                      onClick={() => changeStatus(task)}
-                      style={{
-                        ...getStatusStyle(task.status),
-                        border: "none",
-                        borderRadius: "20px",
-                        padding: "8px 12px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {getStatusButton(task.status)}
-                    </button>
-                  </td>
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Due Date</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
 
-                  {/* ACTIONS */}
-                  <td style={{ padding: "12px" }}>
-                    <button
-                      onClick={() =>
-                        navigate(`/edit-task/${task.id}`)
-                      }
-                      style={{
-                        backgroundColor: "#F9A8D4",
-                        color: "#831843",
-                        border: "none",
-                        borderRadius: "7px",
-                        padding: "8px 12px",
-                        marginRight: "5px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                      }}
-                    >
-                      ✏️ Edit
-                    </button>
+                <tbody>
+                  {tasks.map((task) => {
+                    const status = getStatus(task.status);
+                    const priority = getPriority(task.priority);
 
-                    <button
-                      onClick={() => deleteTask(task.id)}
-                      style={{
-                        backgroundColor: "#F472B6",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "7px",
-                        padding: "8px 12px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                      }}
-                    >
-                      🗑️ Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+                    return (
+                      <tr key={task.id}>
+
+                        <td>
+                          <div className="task-title-cell">
+                            <strong>{task.title}</strong>
+                            <span>
+                              {task.description || "No description"}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td>
+                          <span className="date-text">
+                            {task.dueDate || "No date"}
+                          </span>
+                        </td>
+
+                        <td>
+                          <span className={`badge ${priority.className}`}>
+                            {priority.text}
+                          </span>
+                        </td>
+
+                        <td>
+                          <button
+                            className={`badge status-button ${status.className}`}
+                            onClick={() => changeStatus(task)}
+                          >
+                            {status.icon} {status.text}
+                          </button>
+                        </td>
+
+                        <td>
+                          <div className="table-actions">
+
+                            <button
+                              className="icon-action edit"
+                              title="Edit"
+                              onClick={() =>
+                                navigate(`/edit-task/${task.id}`)
+                              }
+                            >
+                              ✎
+                            </button>
+
+                            <button
+                              className="icon-action delete"
+                              title="Delete"
+                              onClick={() => deleteTask(task.id)}
+                            >
+                              ×
+                            </button>
+
+                          </div>
+                        </td>
+
+                      </tr>
+                    );
+                  })}
+                </tbody>
+
+              </table>
+
+            </div>
+          )}
+
+        </section>
+
+        <footer className="student-footer">
+          Student Task Manager • Stay focused, stay productive.
+        </footer>
+
+      </main>
     </div>
   );
 }

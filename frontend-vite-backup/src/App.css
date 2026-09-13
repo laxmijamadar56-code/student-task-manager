@@ -1,329 +1,570 @@
-/* =========================================
-   🎓 STUDENT TASK MANAGER
-   PROFESSIONAL COLOR THEME
-========================================= */
-
-:root {
-  --primary: #0F5132;        /* Deep Green */
-  --primary-dark: #083B25;
-
-  --pink: #D94F7D;           /* Rose Pink */
-  --pink-dark: #B83B65;
-
-  --blue: #3B82F6;           /* Action Blue */
-  --blue-dark: #2563EB;
-
-  --success: #198754;
-  --danger: #DC3545;
-  --warning: #F59E0B;
-
-  --background: #F7F9F8;
-  --white: #FFFFFF;
-
-  --text: #24352C;
-  --muted: #718096;
-
-  --border: #DDE8E2;
-
-  --shadow: 0 8px 25px rgba(15, 81, 50, 0.10);
+.student-app {
+  min-height: 100vh;
+  display: flex;
+  background: #f6f8fc;
+  color: #172033;
 }
 
-/* =========================================
-   🌿 BODY
-========================================= */
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--background);
-  color: var(--text);
+.student-sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: #111827;
+  color: white;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
 }
 
-
-/* =========================================
-   🎓 HEADINGS
-========================================= */
-
-h1,
-h2,
-h3 {
-  color: var(--primary);
+.student-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 10px 35px;
 }
 
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #2563eb;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 800;
+}
 
-/* =========================================
-   🟢 MAIN BUTTON
-   Add Task / Login / Save
-========================================= */
+.student-brand h2 {
+  font-size: 19px;
+  margin-bottom: 3px;
+}
+
+.student-brand span {
+  font-size: 10px;
+  color: #94a3b8;
+  letter-spacing: 1.5px;
+}
+
+.student-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nav-item,
+.logout-nav {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+  padding: 13px 14px;
+  border-radius: 10px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: #1e293b;
+  color: white;
+}
+
+.nav-item.active {
+  box-shadow: inset 3px 0 #3b82f6;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.sidebar-tip {
+  background: #1e293b;
+  border-radius: 13px;
+  padding: 15px;
+  margin-bottom: 18px;
+}
+
+.sidebar-tip div {
+  margin-bottom: 8px;
+}
+
+.sidebar-tip strong {
+  font-size: 13px;
+}
+
+.sidebar-tip p {
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+
+.logout-nav {
+  color: #fca5a5;
+}
+
+.logout-nav:hover {
+  background: #3f1d1d;
+}
+
+.student-main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 38px 45px;
+}
+
+.student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.eyebrow,
+.section-label {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  margin-bottom: 7px;
+}
+
+.student-header h1 {
+  font-size: 30px;
+  letter-spacing: -1px;
+}
+
+.header-subtitle {
+  color: #64748b;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 13px;
+  padding: 10px 15px;
+  min-width: 190px;
+}
+
+.profile-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.profile-card strong,
+.profile-card span {
+  display: block;
+}
+
+.profile-card strong {
+  font-size: 13px;
+}
+
+.profile-card span {
+  color: #94a3b8;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.student-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.student-stat-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-symbol {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.stat-symbol.blue {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.stat-symbol.orange {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.stat-symbol.purple {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.stat-symbol.green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.student-stat-card span {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.student-stat-card strong {
+  font-size: 24px;
+}
+
+.progress-card,
+.tasks-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.progress-card {
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-info h2,
+.tasks-card h2 {
+  font-size: 18px;
+}
+
+.progress-info > strong {
+  font-size: 24px;
+  color: #2563eb;
+}
+
+.progress-track {
+  height: 8px;
+  background: #eef2f7;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 18px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2563eb;
+  border-radius: inherit;
+  transition: width .4s ease;
+}
+
+.progress-text {
+  margin-top: 8px;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.tasks-card {
+  overflow: hidden;
+}
+
+.tasks-card-header {
+  padding: 23px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
 
 .primary-btn,
-.add-task-btn,
-.login-button,
-.save-btn {
-  background: var(--primary) !important;
-  color: white !important;
-
-  border: none;
-  border-radius: 10px;
-
-  padding: 12px 20px;
-
+.secondary-btn {
+  border-radius: 9px;
+  padding: 10px 15px;
   font-weight: 700;
-  cursor: pointer;
-
-  transition: 0.2s;
+  border: 0;
+  transition: .2s;
 }
 
-.primary-btn:hover,
-.add-task-btn:hover,
-.login-button:hover,
-.save-btn:hover {
-  background: var(--primary-dark) !important;
+.primary-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
   transform: translateY(-1px);
 }
 
-
-/* =========================================
-   🔵 EDIT BUTTON
-========================================= */
-
-.edit-btn {
-  background: var(--blue) !important;
-  color: white !important;
-
-  border: none;
-  border-radius: 8px;
-
-  padding: 9px 15px;
-
-  font-weight: 700;
-  cursor: pointer;
+.secondary-btn {
+  background: #f1f5f9;
+  color: #475569;
 }
 
-.edit-btn:hover {
-  background: var(--blue-dark) !important;
+.secondary-btn:hover {
+  background: #e2e8f0;
 }
 
-
-/* =========================================
-   🔴 DELETE BUTTON
-========================================= */
-
-.delete-btn {
-  background: var(--danger) !important;
-  color: white !important;
-
-  border: none;
-  border-radius: 8px;
-
-  padding: 9px 15px;
-
-  font-weight: 700;
-  cursor: pointer;
+.task-table-wrapper {
+  overflow-x: auto;
 }
 
-.delete-btn:hover {
-  background: #B02A37 !important;
-}
-
-
-/* =========================================
-   🟡 STATUS BUTTON
-========================================= */
-
-.status-btn {
-  background: var(--warning) !important;
-  color: white !important;
-
-  border: none;
-  border-radius: 8px;
-
-  padding: 9px 15px;
-
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.status-btn:hover {
-  background: #D97706 !important;
-}
-
-
-/* =========================================
-   💗 SPECIAL / ADMIN BUTTON
-========================================= */
-
-.admin-btn,
-.admin-login-btn {
-  background: var(--pink) !important;
-  color: white !important;
-
-  border: none;
-  border-radius: 10px;
-
-  padding: 11px 18px;
-
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.admin-btn:hover,
-.admin-login-btn:hover {
-  background: var(--pink-dark) !important;
-}
-
-
-/* =========================================
-   🚪 LOGOUT
-========================================= */
-
-.logout-btn,
-.logout-button {
-  background: var(--pink) !important;
-  color: white !important;
-
-  border: none;
-  border-radius: 9px;
-
-  padding: 10px 17px;
-
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.logout-btn:hover,
-.logout-button:hover {
-  background: var(--pink-dark) !important;
-}
-
-
-/* =========================================
-   💚 CARDS
-========================================= */
-
-.card,
-.dashboard-card,
-.task-card,
-.form-card,
-.login-card,
-.admin-card {
-  background: var(--white);
-
-  border: 1px solid var(--border);
-
-  border-radius: 16px;
-
-  box-shadow: var(--shadow);
-}
-
-
-/* =========================================
-   🌿 INPUTS
-========================================= */
-
-input,
-textarea,
-select {
+.modern-task-table {
   width: 100%;
-  box-sizing: border-box;
-
-  padding: 12px 14px;
-
-  border: 1px solid var(--border);
-
-  border-radius: 9px;
-
-  background: white;
-
-  color: var(--text);
-
-  outline: none;
+  min-width: 750px;
+  border-collapse: collapse;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--primary);
-
-  box-shadow:
-    0 0 0 3px rgba(15, 81, 50, 0.10);
+.modern-task-table th {
+  text-align: left;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 10px;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 13px 20px;
 }
 
-
-/* =========================================
-   💚 TABLE HEADER
-========================================= */
-
-th {
-  background: var(--primary);
-  color: white;
-
-  padding: 13px;
+.modern-task-table td {
+  padding: 16px 20px;
+  border-top: 1px solid #eef2f7;
+  font-size: 12px;
 }
 
-td {
-  padding: 12px;
-
-  border-bottom: 1px solid var(--border);
+.task-title-cell strong,
+.task-title-cell span {
+  display: block;
 }
 
-tr:hover {
-  background: #FDF7F9;
+.task-title-cell strong {
+  font-size: 13px;
+  margin-bottom: 5px;
 }
 
-
-/* =========================================
-   🟡 STATUS BADGES
-========================================= */
-
-.status-pending {
-  background: #FFF3CD;
-  color: #856404;
+.task-title-cell span {
+  max-width: 230px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.status-in-progress {
-  background: #E8F1FF;
-  color: #2563EB;
+.date-text {
+  color: #64748b;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 30px;
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.priority-high {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.priority-medium {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.priority-low {
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .status-completed {
-  background: #D1E7DD;
-  color: #146C43;
+  background: #ecfdf5;
+  color: #059669;
 }
 
-
-/* =========================================
-   💗 LINKS
-========================================= */
-
-a {
-  color: var(--pink);
-  font-weight: 700;
-  text-decoration: none;
+.status-progress {
+  background: #eff6ff;
+  color: #2563eb;
 }
 
-a:hover {
-  color: var(--pink-dark);
-  text-decoration: underline;
+.status-pending {
+  background: #fff7ed;
+  color: #ea580c;
 }
 
+.status-button {
+  cursor: pointer;
+}
 
-/* =========================================
-   📱 MOBILE
-========================================= */
+.table-actions {
+  display: flex;
+  gap: 6px;
+}
 
-@media (max-width: 600px) {
+.icon-action {
+  width: 31px;
+  height: 31px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 800;
+}
 
-  .edit-btn,
-  .delete-btn,
-  .status-btn {
-    padding: 8px 11px;
-    font-size: 13px;
+.icon-action.edit {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.icon-action.delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.empty-state {
+  padding: 65px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 14px;
+  font-size: 22px;
+}
+
+.empty-state h3 {
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.student-footer {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 11px;
+  padding: 25px 0 5px;
+}
+
+@media (max-width: 1000px) {
+  .student-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .primary-btn,
-  .add-task-btn,
-  .login-button {
+  .student-sidebar {
+    width: 215px;
+  }
+
+  .student-main {
+    margin-left: 215px;
+    width: calc(100% - 215px);
+    padding: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .student-sidebar {
+    position: static;
     width: 100%;
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .student-app {
+    display: block;
+  }
+
+  .student-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+  }
+
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .student-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 22px 15px;
+  }
+
+  .student-header {
+    display: block;
+  }
+
+  .profile-card {
+    margin-top: 18px;
+  }
+
+  .student-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tasks-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 450px) {
+  .student-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .student-header h1 {
+    font-size: 25px;
   }
 }

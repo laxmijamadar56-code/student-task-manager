@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+}
+
+.admin-login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #eef4ff, #dbeafe);
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.admin-icon {
+  font-size: 55px;
+  margin-bottom: 10px;
+}
+
+.admin-login-card h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #172554;
+}
+
+.admin-subtitle {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.admin-login-card form {
+  text-align: left;
+}
+
+.admin-login-card label {
+  display: block;
+  margin: 15px 0 7px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.admin-login-card input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+.admin-login-card input:focus {
+  border-color: #2563eb;
+}
+
+.admin-login-card form button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.admin-login-card form button:hover {
+  background: #1d4ed8;
+}
+
+.back-login {
+  margin-top: 20px;
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-login:hover {
+  text-decoration: underline;
+}

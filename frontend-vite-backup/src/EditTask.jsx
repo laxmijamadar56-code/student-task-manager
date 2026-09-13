@@ -18,7 +18,7 @@ function EditTask() {
 
   // Load task details
   useEffect(() => {
-    fetch(`http://localhost:8081/tasks/${id}`)
+    fetch(`http://localhost:8080/tasks/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Task not found");
@@ -61,7 +61,7 @@ function EditTask() {
 
     try {
       const response = await fetch(
-        `http://localhost:8081/tasks/${id}`,
+        `http://localhost:8080/tasks/${id}`,
         {
           method: "PUT",
           headers: {

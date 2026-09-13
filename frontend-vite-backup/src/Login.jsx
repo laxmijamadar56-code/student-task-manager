@@ -1,94 +1,127 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    if (!email || !password) {
-      alert("Please enter email and password");
-      return;
+    try {
+      const response = await fetch("http://localhost:8080/students/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (!response.ok) {
+        alert("Invalid email or password");
+        return;
+      }
+
+      const student = await response.json();
+
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("student", JSON.stringify(student));
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(error);
+      alert("Cannot connect to Spring Boot backend");
+    } finally {
+      setLoading(false);
     }
-
-    navigate("/dashboard");
   };
 
   return (
     <div className="login-page">
-
       <div className="login-card">
 
-        {/* Logo */}
         <div className="login-logo">
           🎓
         </div>
 
-        {/* Title */}
-        <h1 className="login-title">
-          Student Task Manager
-        </h1>
-
+        <h1>Student Task Manager</h1>
         <p className="login-subtitle">
-          🔐 Login to manage your tasks
+          Manage your academic tasks easily
         </p>
 
-        {/* Login Form */}
+        <div className="login-heading">
+          <h2>Student Login</h2>
+          <p>Login to continue to your dashboard</p>
+        </div>
+
         <form onSubmit={handleLogin}>
 
-          <div className="login-form-group">
-            <label>📧 Email</label>
+          <label>Email Address</label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
+          <label>Password</label>
+
+          <div className="password-wrapper">
             <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div className="login-form-group">
-            <label>🔑 Password</label>
-
-            <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
+
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
           </div>
 
           <button
             type="submit"
             className="login-button"
+            disabled={loading}
           >
-            🔐 Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
 
-        {/* Register */}
-        <div className="register-section">
-          <p>Don't have an account?</p>
-
-          <Link to="/register">
-            📝 Create Account
-          </Link>
+        <div className="register-link">
+          <span>Don't have an account?</span>
+          <button onClick={() => navigate("/register")}>
+            Create Account
+          </button>
         </div>
 
-        {/* Admin */}
-        <div className="admin-section">
-          <Link to="/admin-login">
-            👨‍💼 Admin Login
-          </Link>
+        <div className="admin-link">
+          <button onClick={() => navigate("/admin-login")}>
+            Admin Login
+          </button>
         </div>
+
+        <p className="login-footer">
+          Student Task Manager • Mini Project
+        </p>
 
       </div>
-
     </div>
   );
 }
