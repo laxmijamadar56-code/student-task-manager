@@ -1,5 +1,6 @@
 package com.example.studenttaskmanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,10 +14,22 @@ public class Student {
     private Long id;
 
     private String name;
+
     private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    // Default constructor
     public Student() {
+    }
+
+    // Parameterized constructor
+    public Student(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
