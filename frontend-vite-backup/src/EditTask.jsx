@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "./TaskForm.css";
 
 function EditTask() {
   const { id } = useParams();
@@ -16,13 +17,13 @@ function EditTask() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  // Load task details
   useEffect(() => {
-    fetch(`http://localhost:8080/tasks/${id}`)
+    fetch(`http://127.0.0.1:8080/tasks/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Task not found");
         }
+
         return response.json();
       })
       .then((data) => {
@@ -37,13 +38,12 @@ function EditTask() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error(error);
-        alert("❌ Unable to load task");
+        console.error("Load task error:", error);
+        alert("❌ Unable to load task.");
         setLoading(false);
       });
   }, [id]);
 
-  // Change input values
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -53,15 +53,24 @@ function EditTask() {
     }));
   };
 
-  // Update task
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    if (!task.title.trim()) {
+      alert("Please enter a task title.");
+      return;
+    }
+
+    if (!task.dueDate) {
+      alert("Please select a due date.");
+      return;
+    }
 
     setUpdating(true);
 
     try {
       const response = await fetch(
-        `http://localhost:8080/tasks/${id}`,
+        `http://127.0.0.1:8080/tasks/${id}`,
         {
           method: "PUT",
           headers: {
@@ -72,24 +81,14 @@ function EditTask() {
       );
 
       if (!response.ok) {
-        const errorMessage = await response.text();
-        console.error("Backend error:", errorMessage);
         throw new Error("Update failed");
       }
 
-      const updatedTask = await response.json();
-
-      console.log("Updated task:", updatedTask);
-
       alert("✅ Task updated successfully!");
-
-      // Go back to dashboard
       navigate("/dashboard");
-
     } catch (error) {
       console.error("Update error:", error);
-
-      alert("❌ Failed to update task");
+      alert("❌ Failed to update task.");
     } finally {
       setUpdating(false);
     }
@@ -97,148 +96,292 @@ function EditTask() {
 
   if (loading) {
     return (
-      <div style={{ padding: "30px" }}>
-        <h2>⏳ Loading task...</h2>
+      <div className="task-loading-page">
+        <div className="loading-card">
+          <div className="loading-icon">⏳</div>
+
+          <p className="page-label">TASK MANAGEMENT</p>
+
+          <h2>Loading Task...</h2>
+
+          <p>
+            Please wait while we fetch your task details.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        maxWidth: "600px",
-        margin: "30px auto",
-        padding: "30px",
-      }}
-    >
-      <h1>🎓 Student Task Manager</h1>
+    <div className="task-form-page">
 
-      <h2>✏️ Edit Task</h2>
+      {/* HEADER */}
+      <header className="task-form-header">
 
-      <form onSubmit={handleUpdate}>
+        <div className="task-brand">
+          <div className="task-brand-icon">✓</div>
 
-        {/* Title */}
-        <label>
-          <b>Title</b>
-        </label>
+          <div>
+            <h1>Student Task Manager</h1>
+            <p>Stay organized. Stay on track.</p>
+          </div>
+        </div>
 
-        <input
-          type="text"
-          name="title"
-          value={task.title}
-          onChange={handleChange}
-          required
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            marginBottom: "15px",
-          }}
-        />
-
-        {/* Description */}
-        <label>
-          <b>Description</b>
-        </label>
-
-        <textarea
-          name="description"
-          value={task.description}
-          onChange={handleChange}
-          required
-          rows="4"
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            marginBottom: "15px",
-          }}
-        />
-
-        {/* Due Date */}
-        <label>
-          <b>Due Date</b>
-        </label>
-
-        <input
-          type="date"
-          name="dueDate"
-          value={task.dueDate}
-          onChange={handleChange}
-          required
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            marginBottom: "15px",
-          }}
-        />
-
-        {/* Priority */}
-        <label>
-          <b>Priority</b>
-        </label>
-
-        <select
-          name="priority"
-          value={task.priority}
-          onChange={handleChange}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            marginBottom: "15px",
-          }}
-        >
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-        </select>
-
-        {/* Status */}
-        <label>
-          <b>Status</b>
-        </label>
-
-        <select
-          name="status"
-          value={task.status}
-          onChange={handleChange}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            marginBottom: "20px",
-          }}
-        >
-          <option value="PENDING">Pending</option>
-          <option value="COMPLETED">Completed</option>
-        </select>
-
-        {/* Update button */}
         <button
-          type="submit"
-          disabled={updating}
-          style={{
-            padding: "10px 20px",
-          }}
-        >
-          {updating ? "⏳ Updating..." : "💾 Update Task"}
-        </button>
-
-        {/* Back button */}
-        <button
-          type="button"
+          className="header-back-button"
           onClick={() => navigate("/dashboard")}
-          style={{
-            padding: "10px 20px",
-            marginLeft: "10px",
-          }}
         >
-          ← Back to Dashboard
+          ← Dashboard
         </button>
 
-      </form>
+      </header>
+
+      {/* MAIN */}
+      <main className="task-form-main">
+
+        <div className="task-form-title">
+
+          <div className="page-icon edit-icon">
+            ✎
+          </div>
+
+          <div>
+            <p className="page-label">
+              TASK MANAGEMENT
+            </p>
+
+            <h2>Edit Task</h2>
+
+            <p>
+              Update your task details and keep your
+              academic work on track.
+            </p>
+          </div>
+
+        </div>
+
+        {/* TASK ID */}
+        <div className="edit-task-id">
+          <span>Task ID</span>
+          <strong>#{id}</strong>
+        </div>
+
+        <form
+          className="task-form-card"
+          onSubmit={handleUpdate}
+        >
+
+          {/* TASK INFORMATION */}
+          <div className="form-section">
+
+            <div className="section-heading">
+              <span className="section-number">
+                01
+              </span>
+
+              <div>
+                <h3>Task Information</h3>
+                <p>
+                  Update the basic information about your task.
+                </p>
+              </div>
+            </div>
+
+            <div className="form-divider"></div>
+
+            <div className="form-group">
+
+              <label htmlFor="title">
+                Task Title <span>*</span>
+              </label>
+
+              <div className="input-with-icon">
+                <span>📝</span>
+
+                <input
+                  id="title"
+                  type="text"
+                  name="title"
+                  placeholder="Example: Complete DSP assignment"
+                  value={task.title}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+            </div>
+
+            <div className="form-group">
+
+              <label htmlFor="description">
+                Description
+              </label>
+
+              <textarea
+                id="description"
+                name="description"
+                value={task.description}
+                onChange={handleChange}
+                rows="5"
+                placeholder="Write a short description of the task..."
+              />
+
+              <small>
+                Add details that will help you complete this task.
+              </small>
+
+            </div>
+
+          </div>
+
+          {/* TASK SETTINGS */}
+          <div className="form-section">
+
+            <div className="section-heading">
+              <span className="section-number">
+                02
+              </span>
+
+              <div>
+                <h3>Task Settings</h3>
+                <p>
+                  Update the deadline, priority and current status.
+                </p>
+              </div>
+            </div>
+
+            <div className="form-divider"></div>
+
+            <div className="form-grid">
+
+              {/* DUE DATE */}
+              <div className="form-group">
+
+                <label htmlFor="dueDate">
+                  Due Date <span>*</span>
+                </label>
+
+                <div className="input-with-icon">
+                  <span>📅</span>
+
+                  <input
+                    id="dueDate"
+                    type="date"
+                    name="dueDate"
+                    value={task.dueDate}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+              </div>
+
+              {/* PRIORITY */}
+              <div className="form-group">
+
+                <label htmlFor="priority">
+                  Priority
+                </label>
+
+                <div className="input-with-icon">
+                  <span>🎯</span>
+
+                  <select
+                    id="priority"
+                    name="priority"
+                    value={task.priority}
+                    onChange={handleChange}
+                  >
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                  </select>
+                </div>
+
+              </div>
+
+              {/* STATUS */}
+              <div className="form-group">
+
+                <label htmlFor="status">
+                  Status
+                </label>
+
+                <div className="input-with-icon">
+                  <span>📌</span>
+
+                  <select
+                    id="status"
+                    name="status"
+                    value={task.status}
+                    onChange={handleChange}
+                  >
+                    <option value="PENDING">Pending</option>
+                    <option value="COMPLETED">Completed</option>
+                  </select>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* TIP */}
+          <div className="form-tip">
+
+            <div className="tip-icon">
+              💡
+            </div>
+
+            <div>
+              <strong>
+                Keep your tasks updated
+              </strong>
+
+              <p>
+                Update the priority, deadline or status
+                whenever your academic schedule changes.
+              </p>
+            </div>
+
+          </div>
+
+          {/* ACTIONS */}
+          <div className="form-actions">
+
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={() => navigate("/dashboard")}
+              disabled={updating}
+            >
+              ← Back
+            </button>
+
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={updating}
+            >
+              {updating
+                ? "⏳ Updating..."
+                : "✓ Update Task"}
+            </button>
+
+          </div>
+
+        </form>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="task-form-footer">
+        <span>Student Task Manager</span>
+        <span>•</span>
+        <span>College Mini Project</span>
+      </footer>
+
     </div>
   );
 }

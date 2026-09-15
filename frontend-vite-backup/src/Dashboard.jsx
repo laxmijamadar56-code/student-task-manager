@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -7,14 +8,22 @@ function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const student = JSON.parse(
+    localStorage.getItem("student") || "{}"
+  );
+
+  const studentName = student.name || "Student";
+  const firstName = studentName.split(" ")[0];
+
   const loadTasks = () => {
     setLoading(true);
 
-    fetch("http://localhost:8080/tasks")
+    fetch("http://127.0.0.1:8080/tasks")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch tasks");
         }
+
         return response.json();
       })
       .then((data) => {
@@ -33,12 +42,6 @@ function Dashboard() {
     loadTasks();
   }, []);
 
-  const student = JSON.parse(
-    localStorage.getItem("student") || "{}"
-  );
-
-  const studentName = student.name || "Student";
-
   const pendingTasks = tasks.filter(
     (task) => task.status?.toUpperCase() === "PENDING"
   );
@@ -53,6 +56,10 @@ function Dashboard() {
     (task) => task.status?.toUpperCase() === "COMPLETED"
   );
 
+  const highPriorityTasks = tasks.filter(
+    (task) => task.priority?.toUpperCase() === "HIGH"
+  );
+
   const progress = useMemo(() => {
     if (tasks.length === 0) return 0;
 
@@ -62,13 +69,13 @@ function Dashboard() {
   }, [tasks, completedTasks.length]);
 
   const deleteTask = async (id) => {
-    if (!window.confirm("Delete this task?")) {
+    if (!window.confirm("Are you sure you want to delete this task?")) {
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:8080/tasks/${id}`,
+        `http://127.0.0.1:8080/tasks/${id}`,
         {
           method: "DELETE",
         }
@@ -93,7 +100,10 @@ function Dashboard() {
 
     if (currentStatus === "PENDING") {
       newStatus = "IN_PROGRESS";
-    } else if (currentStatus === "IN_PROGRESS") {
+    } else if (
+      currentStatus === "IN_PROGRESS" ||
+      currentStatus === "IN PROGRESS"
+    ) {
       newStatus = "COMPLETED";
     } else {
       newStatus = "PENDING";
@@ -101,7 +111,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/tasks/${task.id}`,
+        `http://127.0.0.1:8080/tasks/${task.id}`,
         {
           method: "PUT",
           headers: {
@@ -180,6 +190,18 @@ function Dashboard() {
     };
   };
 
+  const formatDate = (date) => {
+    if (!date) return "No date";
+
+    const parts = date.split("-");
+
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    return date;
+  };
+
   const logout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("student");
@@ -193,35 +215,37 @@ function Dashboard() {
       <aside className="student-sidebar">
 
         <div className="student-brand">
-          <div className="brand-logo">✓</div>
+          <div className="brand-logo">
+            ✓
+          </div>
 
           <div>
             <h2>TaskFlow</h2>
-            <span>STUDENT</span>
+            <span>STUDENT PORTAL</span>
           </div>
         </div>
 
         <nav className="student-nav">
 
           <button className="nav-item active">
-            <span>▦</span>
-            Dashboard
+            <span className="nav-icon">⌂</span>
+            <span>Dashboard</span>
           </button>
 
           <button
             className="nav-item"
             onClick={() => navigate("/tasks")}
           >
-            <span>☷</span>
-            My Tasks
+            <span className="nav-icon">☷</span>
+            <span>My Tasks</span>
           </button>
 
           <button
             className="nav-item"
             onClick={() => navigate("/add-task")}
           >
-            <span>＋</span>
-            Add Task
+            <span className="nav-icon">＋</span>
+            <span>Add Task</span>
           </button>
 
         </nav>
@@ -229,11 +253,14 @@ function Dashboard() {
         <div className="sidebar-bottom">
 
           <div className="sidebar-tip">
-            <div>💡</div>
-            <strong>Stay productive</strong>
-            <p>
-              Keep your tasks organized and complete them on time.
-            </p>
+            <div className="tip-icon">💡</div>
+
+            <div>
+              <strong>Study smart</strong>
+              <p>
+                Organize your work and stay on top of your academic goals.
+              </p>
+            </div>
           </div>
 
           <button
@@ -245,148 +272,289 @@ function Dashboard() {
           </button>
 
         </div>
+
       </aside>
 
-      {/* MAIN */}
+      {/* MAIN CONTENT */}
       <main className="student-main">
 
+        {/* HEADER */}
         <header className="student-header">
 
-          <div>
-            <p className="eyebrow">STUDENT DASHBOARD</p>
+          <div className="welcome-section">
+
+            <div className="eyebrow">
+              STUDENT DASHBOARD
+            </div>
 
             <h1>
-              Good day, {studentName} 👋
+              Good day, {firstName} <span>👋</span>
             </h1>
 
-            <p className="header-subtitle">
-              Here's what's happening with your tasks today.
+            <p>
+              Manage your academic tasks and keep your progress on track.
             </p>
+
           </div>
 
           <div className="profile-card">
+
             <div className="profile-avatar">
               {studentName.charAt(0).toUpperCase()}
             </div>
 
-            <div>
+            <div className="profile-details">
               <strong>{studentName}</strong>
-              <span>{student.email || "Student"}</span>
+              <span>{student.email || "Student Account"}</span>
             </div>
+
           </div>
 
         </header>
 
-        {/* STATS */}
+        {/* STATISTICS */}
         <section className="student-stats">
 
-          <div className="student-stat-card">
-            <div className="stat-symbol blue">☷</div>
-            <div>
+          <div className="student-stat-card total-card">
+
+            <div className="stat-icon">
+              ☷
+            </div>
+
+            <div className="stat-content">
               <span>Total Tasks</span>
               <strong>{tasks.length}</strong>
+              <small>All your tasks</small>
             </div>
+
           </div>
 
-          <div className="student-stat-card">
-            <div className="stat-symbol orange">○</div>
-            <div>
+          <div className="student-stat-card pending-card">
+
+            <div className="stat-icon">
+              ○
+            </div>
+
+            <div className="stat-content">
               <span>Pending</span>
               <strong>{pendingTasks.length}</strong>
+              <small>Need attention</small>
             </div>
+
           </div>
 
-          <div className="student-stat-card">
-            <div className="stat-symbol purple">◐</div>
-            <div>
+          <div className="student-stat-card progress-card-stat">
+
+            <div className="stat-icon">
+              ◐
+            </div>
+
+            <div className="stat-content">
               <span>In Progress</span>
               <strong>{inProgressTasks.length}</strong>
+              <small>Currently working</small>
             </div>
+
           </div>
 
-          <div className="student-stat-card">
-            <div className="stat-symbol green">✓</div>
-            <div>
+          <div className="student-stat-card completed-card">
+
+            <div className="stat-icon">
+              ✓
+            </div>
+
+            <div className="stat-content">
               <span>Completed</span>
               <strong>{completedTasks.length}</strong>
+              <small>Successfully done</small>
             </div>
+
           </div>
 
         </section>
 
-        {/* PROGRESS */}
-        <section className="progress-card">
+        {/* PROGRESS + QUICK ACTIONS */}
+        <section className="dashboard-grid">
 
-          <div className="progress-info">
+          {/* PROGRESS */}
+          <div className="progress-card">
+
+            <div className="progress-top">
+
+              <div>
+                <p className="section-label">
+                  YOUR PROGRESS
+                </p>
+
+                <h2>
+                  Task completion
+                </h2>
+
+                <p className="progress-description">
+                  Keep going! Every completed task gets you closer to your goals.
+                </p>
+              </div>
+
+              <div className="progress-circle">
+                <strong>{progress}%</strong>
+                <span>Done</span>
+              </div>
+
+            </div>
+
+            <div className="progress-track">
+              <div
+                className="progress-fill"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            <div className="progress-bottom">
+              <span>
+                {completedTasks.length} of {tasks.length} tasks completed
+              </span>
+
+              <span>
+                {pendingTasks.length} pending
+              </span>
+            </div>
+
+          </div>
+
+          {/* QUICK ACTIONS */}
+          <div className="quick-actions-card">
+
             <div>
-              <p className="section-label">YOUR PROGRESS</p>
-              <h2>Task completion</h2>
+              <p className="section-label">
+                QUICK ACTIONS
+              </p>
+
+              <h2>
+                What would you like to do?
+              </h2>
             </div>
 
-            <strong>{progress}%</strong>
-          </div>
+            <div className="quick-buttons">
 
-          <div className="progress-track">
-            <div
-              className="progress-fill"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+              <button
+                className="quick-add"
+                onClick={() => navigate("/add-task")}
+              >
+                <span>＋</span>
 
-          <p className="progress-text">
-            {completedTasks.length} of {tasks.length} tasks completed
-          </p>
+                <div>
+                  <strong>Add New Task</strong>
+                  <small>Create an academic task</small>
+                </div>
+              </button>
+
+              <button
+                className="quick-view"
+                onClick={() => navigate("/tasks")}
+              >
+                <span>☷</span>
+
+                <div>
+                  <strong>View All Tasks</strong>
+                  <small>Manage your tasks</small>
+                </div>
+              </button>
+
+            </div>
+
+          </div>
 
         </section>
 
-        {/* TASKS */}
+        {/* TASK OVERVIEW */}
         <section className="tasks-card">
 
           <div className="tasks-card-header">
 
             <div>
-              <p className="section-label">TASK OVERVIEW</p>
-              <h2>My Tasks</h2>
+              <p className="section-label">
+                TASK OVERVIEW
+              </p>
+
+              <h2>
+                My Recent Tasks
+              </h2>
+
+              <p>
+                Stay updated with your latest academic work.
+              </p>
             </div>
 
             <div className="header-actions">
+
+              <div className="task-count">
+                {tasks.length} {tasks.length === 1 ? "Task" : "Tasks"}
+              </div>
+
               <button
                 className="secondary-btn"
                 onClick={() => navigate("/tasks")}
               >
-                View all
+                View All →
               </button>
 
               <button
                 className="primary-btn"
                 onClick={() => navigate("/add-task")}
               >
-                + Add Task
+                ＋ Add Task
               </button>
+
             </div>
 
           </div>
 
+          {/* LOADING */}
           {loading ? (
+
             <div className="empty-state">
-              <div className="empty-icon">⏳</div>
-              <h3>Loading tasks...</h3>
-              <p>Please wait a moment.</p>
+
+              <div className="loading-spinner"></div>
+
+              <h3>
+                Loading your tasks...
+              </h3>
+
+              <p>
+                Please wait a moment.
+              </p>
+
             </div>
+
           ) : tasks.length === 0 ? (
+
+            /* NO TASKS */
             <div className="empty-state">
-              <div className="empty-icon">✓</div>
-              <h3>No tasks yet</h3>
-              <p>Create your first task to get started.</p>
+
+              <div className="empty-icon">
+                ✓
+              </div>
+
+              <h3>
+                No tasks yet
+              </h3>
+
+              <p>
+                Create your first academic task and start organizing your work.
+              </p>
 
               <button
                 className="primary-btn"
                 onClick={() => navigate("/add-task")}
               >
-                + Create Task
+                ＋ Create Your First Task
               </button>
+
             </div>
+
           ) : (
+
+            /* TASK TABLE */
             <div className="task-table-wrapper">
 
               <table className="modern-task-table">
@@ -397,12 +565,14 @@ function Dashboard() {
                     <th>Due Date</th>
                     <th>Priority</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
 
                 <tbody>
+
                   {tasks.map((task) => {
+
                     const status = getStatus(task.status);
                     const priority = getPriority(task.priority);
 
@@ -410,41 +580,64 @@ function Dashboard() {
                       <tr key={task.id}>
 
                         <td>
+
                           <div className="task-title-cell">
-                            <strong>{task.title}</strong>
-                            <span>
-                              {task.description || "No description"}
-                            </span>
+
+                            <div className="task-mini-icon">
+                              ✓
+                            </div>
+
+                            <div>
+                              <strong>
+                                {task.title}
+                              </strong>
+
+                              <span>
+                                {task.description || "No description added"}
+                              </span>
+                            </div>
+
                           </div>
+
                         </td>
 
                         <td>
+
                           <span className="date-text">
-                            {task.dueDate || "No date"}
+                            📅 {formatDate(task.dueDate)}
                           </span>
+
                         </td>
 
                         <td>
-                          <span className={`badge ${priority.className}`}>
+
+                          <span
+                            className={`badge ${priority.className}`}
+                          >
                             {priority.text}
                           </span>
+
                         </td>
 
                         <td>
+
                           <button
                             className={`badge status-button ${status.className}`}
                             onClick={() => changeStatus(task)}
+                            title="Click to change status"
                           >
                             {status.icon} {status.text}
                           </button>
+
                         </td>
 
                         <td>
+
                           <div className="table-actions">
 
                             <button
                               className="icon-action edit"
-                              title="Edit"
+                              title="Edit Task"
                               onClick={() =>
                                 navigate(`/edit-task/${task.id}`)
                               }
@@ -454,32 +647,70 @@ function Dashboard() {
 
                             <button
                               className="icon-action delete"
-                              title="Delete"
+                              title="Delete Task"
                               onClick={() => deleteTask(task.id)}
                             >
-                              ×
+                              🗑
                             </button>
 
                           </div>
+
                         </td>
 
                       </tr>
                     );
                   })}
+
                 </tbody>
 
               </table>
 
             </div>
+
           )}
 
         </section>
 
+        {/* PRODUCTIVITY SUMMARY */}
+        <section className="productivity-card">
+
+          <div className="productivity-icon">
+            🎯
+          </div>
+
+          <div className="productivity-text">
+            <strong>
+              {progress >= 75
+                ? "Excellent work! Keep it up."
+                : progress >= 50
+                ? "You're making good progress!"
+                : progress > 0
+                ? "Keep working towards your goals!"
+                : "Ready to start your first task?"}
+            </strong>
+
+            <span>
+              {highPriorityTasks.length} high-priority{" "}
+              {highPriorityTasks.length === 1 ? "task" : "tasks"} need your attention.
+            </span>
+          </div>
+
+          <button
+            onClick={() => navigate("/tasks")}
+          >
+            Manage Tasks →
+          </button>
+
+        </section>
+
         <footer className="student-footer">
-          Student Task Manager • Stay focused, stay productive.
+          <span>Student Task Manager</span>
+          <span>•</span>
+          <span>Stay focused, stay productive.</span>
         </footer>
 
       </main>
+
     </div>
   );
 }

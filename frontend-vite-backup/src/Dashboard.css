@@ -1,0 +1,1102 @@
+/* =========================================
+   STUDENT DASHBOARD
+   Teal + Navy College Theme
+========================================= */
+
+.student-app {
+  min-height: 100vh;
+  display: flex;
+  background: #f3f8f8;
+  color: #173f3c;
+  font-family: "Inter", Arial, sans-serif;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.student-sidebar {
+  width: 245px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #123f3c 0%, #0b2928 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+.student-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #14b8a6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  box-shadow: 0 6px 18px rgba(20, 184, 166, 0.25);
+}
+
+.student-brand h2 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+
+.student-brand span {
+  display: block;
+  margin-top: 3px;
+  color: #8bd8d0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.student-nav {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #b7d0ce;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  transition: 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.nav-item.active {
+  background: #14b8a6;
+  color: white;
+  box-shadow: 0 7px 18px rgba(20, 184, 166, 0.2);
+}
+
+.nav-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.sidebar-tip {
+  display: flex;
+  gap: 10px;
+  padding: 13px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.tip-icon {
+  font-size: 19px;
+}
+
+.sidebar-tip strong {
+  display: block;
+  font-size: 12px;
+  color: white;
+}
+
+.sidebar-tip p {
+  margin: 5px 0 0;
+  color: #a9c4c1;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.logout-nav {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #c7ddda;
+  padding: 11px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.logout-nav:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+/* =========================================
+   MAIN AREA
+========================================= */
+
+.student-main {
+  margin-left: 245px;
+  width: calc(100% - 245px);
+  min-height: 100vh;
+  padding: 30px 34px 25px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.student-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  color: #0f766e;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.welcome-section h1 {
+  margin: 0;
+  color: #173f3c;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+}
+
+.welcome-section h1 span {
+  font-size: 25px;
+}
+
+.welcome-section > p {
+  margin: 8px 0 0;
+  color: #718482;
+  font-size: 13px;
+}
+
+/* =========================================
+   PROFILE
+========================================= */
+
+.profile-card {
+  min-width: 210px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: white;
+  padding: 10px 14px;
+  border: 1px solid #e1eceb;
+  border-radius: 13px;
+  box-shadow: 0 4px 16px rgba(15, 76, 73, 0.05);
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #d7f5f1;
+  color: #0f766e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.profile-details strong {
+  display: block;
+  color: #173f3c;
+  font-size: 12px;
+}
+
+.profile-details span {
+  display: block;
+  margin-top: 3px;
+  color: #8a9a99;
+  font-size: 9px;
+  max-width: 145px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+.student-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.student-stat-card {
+  min-height: 112px;
+  background: white;
+  border: 1px solid #e1eceb;
+  border-radius: 15px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  box-shadow: 0 5px 18px rgba(15, 76, 73, 0.045);
+  transition: 0.2s ease;
+}
+
+.student-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 22px rgba(15, 76, 73, 0.08);
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.total-card .stat-icon {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.pending-card .stat-icon {
+  background: #fff4dc;
+  color: #c47b00;
+}
+
+.progress-card-stat .stat-icon {
+  background: #e9e3ff;
+  color: #7357c7;
+}
+
+.completed-card .stat-icon {
+  background: #dcf7e9;
+  color: #17834b;
+}
+
+.stat-content span {
+  display: block;
+  color: #758684;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stat-content strong {
+  display: block;
+  color: #173f3c;
+  font-size: 25px;
+  margin-top: 4px;
+}
+
+.stat-content small {
+  display: block;
+  margin-top: 3px;
+  color: #a0aeac;
+  font-size: 9px;
+}
+
+/* =========================================
+   DASHBOARD GRID
+========================================= */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.progress-card,
+.quick-actions-card {
+  background: white;
+  border: 1px solid #e1eceb;
+  border-radius: 15px;
+  padding: 21px;
+  box-shadow: 0 5px 18px rgba(15, 76, 73, 0.045);
+  box-sizing: border-box;
+}
+
+/* =========================================
+   PROGRESS
+========================================= */
+
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.section-label {
+  margin: 0;
+  color: #0f766e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.progress-card h2,
+.quick-actions-card h2,
+.tasks-card h2 {
+  margin: 5px 0 0;
+  color: #173f3c;
+  font-size: 17px;
+}
+
+.progress-description {
+  margin: 7px 0 0;
+  color: #899795;
+  font-size: 10px;
+  line-height: 1.5;
+  max-width: 430px;
+}
+
+.progress-circle {
+  width: 67px;
+  height: 67px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e1f7f4;
+  border: 5px solid #c7efea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-circle strong {
+  color: #0f766e;
+  font-size: 17px;
+}
+
+.progress-circle span {
+  color: #73908c;
+  font-size: 8px;
+  margin-top: 1px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 9px;
+  background: #e8efee;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 22px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0f766e, #14b8a6);
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+.progress-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 9px;
+  color: #8b9a98;
+  font-size: 9px;
+}
+
+/* =========================================
+   QUICK ACTIONS
+========================================= */
+
+.quick-actions-card h2 {
+  font-size: 15px;
+}
+
+.quick-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.quick-buttons button {
+  border: none;
+  border-radius: 11px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s ease;
+}
+
+.quick-buttons button:hover {
+  transform: translateY(-2px);
+}
+
+.quick-buttons button > span {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.quick-add {
+  background: #e1f7f4;
+  color: #0f766e;
+}
+
+.quick-add > span {
+  background: #c5eee8;
+}
+
+.quick-view {
+  background: #f1f5f9;
+  color: #405b5a;
+}
+
+.quick-view > span {
+  background: #e2e8f0;
+}
+
+.quick-buttons strong {
+  display: block;
+  font-size: 10px;
+}
+
+.quick-buttons small {
+  display: block;
+  margin-top: 3px;
+  font-size: 8px;
+  color: #879795;
+}
+
+/* =========================================
+   TASK CARD
+========================================= */
+
+.tasks-card {
+  background: white;
+  border: 1px solid #e1eceb;
+  border-radius: 15px;
+  box-shadow: 0 5px 18px rgba(15, 76, 73, 0.045);
+  overflow: hidden;
+}
+
+.tasks-card-header {
+  padding: 21px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #edf2f1;
+}
+
+.tasks-card-header > div:first-child > p:last-child {
+  margin: 5px 0 0;
+  color: #899795;
+  font-size: 10px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-count {
+  background: #eef7f6;
+  color: #0f766e;
+  border-radius: 20px;
+  padding: 7px 11px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.primary-btn,
+.secondary-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 13px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.primary-btn {
+  background: #0f766e;
+  color: white;
+}
+
+.primary-btn:hover {
+  background: #0b5f59;
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  background: #edf6f5;
+  color: #0f766e;
+}
+
+.secondary-btn:hover {
+  background: #dcefed;
+}
+
+/* =========================================
+   TASK TABLE
+========================================= */
+
+.task-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.modern-task-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.modern-task-table th {
+  background: #f8fbfb;
+  color: #718482;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.modern-task-table td {
+  padding: 13px 16px;
+  border-top: 1px solid #edf2f1;
+  vertical-align: middle;
+}
+
+.modern-task-table tbody tr {
+  transition: 0.15s ease;
+}
+
+.modern-task-table tbody tr:hover {
+  background: #f9fcfc;
+}
+
+/* =========================================
+   TASK TITLE
+========================================= */
+
+.task-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 190px;
+}
+
+.task-mini-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #e1f7f4;
+  color: #0f766e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.task-title-cell strong {
+  display: block;
+  color: #294542;
+  font-size: 11px;
+  font-weight: 700;
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-title-cell span {
+  display: block;
+  color: #96a3a1;
+  font-size: 8px;
+  margin-top: 4px;
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date-text {
+  color: #637573;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* =========================================
+   BADGES
+========================================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 8px;
+  font-size: 8px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.priority-high {
+  background: #fff0e9;
+  color: #c45d32;
+}
+
+.priority-medium {
+  background: #fff5d9;
+  color: #b47700;
+}
+
+.priority-low {
+  background: #edf8ef;
+  color: #39804b;
+}
+
+.status-button {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.status-button:hover {
+  transform: scale(1.03);
+}
+
+.status-completed {
+  background: #dcf7e8;
+  color: #23834d;
+}
+
+.status-progress {
+  background: #eee9ff;
+  color: #7156c7;
+}
+
+.status-pending {
+  background: #fff4d7;
+  color: #ad7300;
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-action {
+  width: 29px;
+  height: 29px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: 0.2s ease;
+}
+
+.icon-action.edit {
+  background: #e9f6f5;
+  color: #0f766e;
+}
+
+.icon-action.delete {
+  background: #fff0f1;
+  color: #d65361;
+}
+
+.icon-action:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state {
+  text-align: center;
+  padding: 55px 20px;
+}
+
+.empty-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 13px;
+  border-radius: 50%;
+  background: #e1f7f4;
+  color: #0f766e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.empty-state h3 {
+  margin: 0;
+  color: #294542;
+  font-size: 15px;
+}
+
+.empty-state p {
+  margin: 6px auto 17px;
+  max-width: 360px;
+  color: #8a9997;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+  border: 4px solid #d9eeee;
+  border-top-color: #0f766e;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   PRODUCTIVITY
+========================================= */
+
+.productivity-card {
+  margin-top: 18px;
+  padding: 16px 19px;
+  background: linear-gradient(100deg, #e4f8f5, #f6fbfb);
+  border: 1px solid #d4ece9;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.productivity-icon {
+  width: 39px;
+  height: 39px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.productivity-text {
+  flex: 1;
+}
+
+.productivity-text strong {
+  display: block;
+  color: #24514d;
+  font-size: 11px;
+}
+
+.productivity-text span {
+  display: block;
+  margin-top: 3px;
+  color: #79908d;
+  font-size: 9px;
+}
+
+.productivity-card button {
+  border: none;
+  background: transparent;
+  color: #0f766e;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.student-footer {
+  padding: 20px 5px 5px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  color: #9aa8a6;
+  font-size: 9px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1050px) {
+  .student-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-main {
+    padding: 25px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+  .student-sidebar {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    position: relative;
+    padding: 12px;
+  }
+
+  .student-app {
+    display: block;
+  }
+
+  .student-brand {
+    padding: 3px 5px 12px;
+  }
+
+  .student-nav {
+    flex-direction: row;
+    margin-top: 12px;
+    gap: 5px;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 9px 6px;
+    font-size: 10px;
+    gap: 5px;
+  }
+
+  .nav-icon {
+    font-size: 14px;
+  }
+
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .student-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 18px 12px 20px;
+  }
+
+  .student-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 18px;
+  }
+
+  .welcome-section h1 {
+    font-size: 23px;
+  }
+
+  .welcome-section > p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .profile-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .student-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .student-stat-card {
+    min-height: 91px;
+    padding: 12px;
+    gap: 9px;
+    border-radius: 12px;
+  }
+
+  .stat-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+    border-radius: 9px;
+  }
+
+  .stat-content span {
+    font-size: 9px;
+  }
+
+  .stat-content strong {
+    font-size: 20px;
+  }
+
+  .stat-content small {
+    font-size: 7px;
+  }
+
+  .dashboard-grid {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .progress-card,
+  .quick-actions-card {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .progress-card h2,
+  .quick-actions-card h2,
+  .tasks-card h2 {
+    font-size: 15px;
+  }
+
+  .progress-description {
+    font-size: 8px;
+  }
+
+  .progress-circle {
+    width: 53px;
+    height: 53px;
+    border-width: 4px;
+  }
+
+  .progress-circle strong {
+    font-size: 13px;
+  }
+
+  .progress-circle span {
+    font-size: 7px;
+  }
+
+  .quick-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .tasks-card-header {
+    padding: 15px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .task-count {
+    margin-right: auto;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    padding: 8px 10px;
+    font-size: 9px;
+  }
+
+  .modern-task-table {
+    min-width: 680px;
+  }
+
+  .productivity-card {
+    align-items: flex-start;
+    padding: 13px;
+  }
+
+  .productivity-card button {
+    display: none;
+  }
+
+  .productivity-text strong {
+    font-size: 10px;
+  }
+
+  .productivity-text span {
+    font-size: 8px;
+  }
+
+  .student-footer {
+    font-size: 8px;
+    flex-wrap: wrap;
+  }
+}
