@@ -7,3 +7,4 @@ target/
 .vscode/
 backend/student-task-manager/src/main/resources/application.properties
 backend/student-task-manager/error.txt
+student_task_manager_backup.sql
