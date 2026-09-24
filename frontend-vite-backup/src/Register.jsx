@@ -33,7 +33,7 @@ function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch("`${API_URL}/students`", {
+      const response = await fetch(`${API_URL}/students`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
