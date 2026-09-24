@@ -568,3 +568,270 @@
     font-size: 25px;
   }
 }
+
+/* =========================
+   LOGIN PAGE DESIGN
+   ========================= */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  background: linear-gradient(135deg, #0f5132 0%, #2563eb 100%);
+  font-family: "Times New Roman", Times, serif;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 430px;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 40px 35px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.20);
+  text-align: center;
+}
+
+.login-card h1 {
+  margin: 0;
+  color: #0f5132;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.login-tagline {
+  color: #64748b;
+  font-size: 14px;
+  margin: 8px 0 25px;
+}
+
+.login-card h2 {
+  color: #172033;
+  font-size: 24px;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #dbe3ea;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #172033;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.login-button {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  margin-top: 5px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.login-message {
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  margin-top: 18px;
+}
+
+.signup-text {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 22px;
+}
+
+.link-button {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.admin-login-button {
+  width: 100%;
+  border: 1px solid #0f5132;
+  border-radius: 10px;
+  padding: 11px;
+  margin-top: 12px;
+  background: white;
+  color: #0f5132;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-login-button:hover {
+  background: #0f5132;
+  color: white;
+}
+
+@media (max-width: 500px) {
+  .login-page {
+    padding: 15px;
+  }
+
+  .login-card {
+    padding: 30px 22px;
+  }
+
+  .login-card h1 {
+    font-size: 26px;
+  }
+}
+
+
+/* =========================
+   EDIT TASK PAGE DESIGN
+   ========================= */
+
+.page-container {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 18px;
+  background: linear-gradient(135deg, #0f5132 0%, #2563eb 100%);
+  font-family: "Times New Roman", Times, serif;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 35px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.20);
+}
+
+.form-card h1 {
+  text-align: center;
+  color: #0f5132;
+  font-size: 30px;
+  margin: 0 0 28px;
+}
+
+.form-card .form-group {
+  margin-bottom: 18px;
+}
+
+.form-card .form-group label {
+  display: block;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.form-card .form-group input,
+.form-card .form-group textarea,
+.form-card .form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dbe3ea;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #172033;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 15px;
+  padding: 12px 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-card .form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-card .form-group select {
+  cursor: pointer;
+}
+
+.form-card .form-group input:focus,
+.form-card .form-group textarea:focus,
+.form-card .form-group select:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-card .login-button,
+.form-card .admin-login-button {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 15px;
+}
+
+.form-card .login-button {
+  margin-top: 5px;
+}
+
+.form-card .admin-login-button {
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .page-container {
+    padding: 20px 14px;
+    align-items: flex-start;
+  }
+
+  .form-card {
+    margin-top: 20px;
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+
+  .form-card h1 {
+    font-size: 26px;
+  }
+}
+
