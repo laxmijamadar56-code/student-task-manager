@@ -1,3 +1,4 @@
+import { API_URL } from "./api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TaskList.css";
@@ -16,7 +17,7 @@ function TaskList() {
   const loadTasks = () => {
     setLoading(true);
 
-    fetch("http://127.0.0.1:8080/tasks")
+    fetch(`${API_URL}/tasks`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch tasks");
@@ -55,7 +56,7 @@ function TaskList() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8080/tasks/${id}`,
+        `${API_URL}/tasks/${id}`,
         {
           method: "DELETE",
         }

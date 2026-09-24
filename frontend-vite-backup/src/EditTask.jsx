@@ -1,387 +1,136 @@
+import { API_URL } from "./api";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./TaskForm.css";
+import "./App.css";
 
 function EditTask() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [task, setTask] = useState({
-    title: "",
-    description: "",
-    dueDate: "",
-    priority: "LOW",
-    status: "PENDING",
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [priority, setPriority] = useState("Medium");
+  const [status, setStatus] = useState("Pending");
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8080/tasks/${id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Task not found");
-        }
-
-        return response.json();
-      })
+    fetch(`${API_URL}/tasks/${id}`)
+      .then((response) => response.json())
       .then((data) => {
-        setTask({
-          title: data.title || "",
-          description: data.description || "",
-          dueDate: data.dueDate || "",
-          priority: data.priority || "LOW",
-          status: data.status || "PENDING",
-        });
-
-        setLoading(false);
+        setTitle(data.title || "");
+        setDescription(data.description || "");
+        setDueDate(data.dueDate || "");
+        setPriority(data.priority || "Medium");
+        setStatus(data.status || "Pending");
       })
       .catch((error) => {
-        console.error("Load task error:", error);
-        alert("❌ Unable to load task.");
-        setLoading(false);
+        console.error("Error fetching task:", error);
       });
   }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setTask((oldTask) => ({
-      ...oldTask,
-      [name]: value,
-    }));
-  };
-
-  const handleUpdate = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!task.title.trim()) {
-      alert("Please enter a task title.");
-      return;
-    }
-
-    if (!task.dueDate) {
-      alert("Please select a due date.");
-      return;
-    }
-
-    setUpdating(true);
+    const updatedTask = {
+      title,
+      description,
+      dueDate,
+      priority,
+      status,
+    };
 
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8080/tasks/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(task),
-        }
-      );
+      const response = await fetch(`${API_URL}/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
 
-      if (!response.ok) {
-        throw new Error("Update failed");
+      if (response.ok) {
+        alert("Task updated successfully!");
+        navigate("/tasks");
+      } else {
+        alert("Failed to update task");
       }
-
-      alert("✅ Task updated successfully!");
-      navigate("/dashboard");
     } catch (error) {
-      console.error("Update error:", error);
-      alert("❌ Failed to update task.");
-    } finally {
-      setUpdating(false);
+      console.error("Error updating task:", error);
+      alert("Cannot connect to Spring Boot backend");
     }
   };
 
-  if (loading) {
-    return (
-      <div className="task-loading-page">
-        <div className="loading-card">
-          <div className="loading-icon">⏳</div>
-
-          <p className="page-label">TASK MANAGEMENT</p>
-
-          <h2>Loading Task...</h2>
-
-          <p>
-            Please wait while we fetch your task details.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="task-form-page">
+    <div className="page-container">
+      <div className="form-card">
+        <h1>Edit Task</h1>
 
-      {/* HEADER */}
-      <header className="task-form-header">
-
-        <div className="task-brand">
-          <div className="task-brand-icon">✓</div>
-
-          <div>
-            <h1>Student Task Manager</h1>
-            <p>Stay organized. Stay on track.</p>
-          </div>
-        </div>
-
-        <button
-          className="header-back-button"
-          onClick={() => navigate("/dashboard")}
-        >
-          ← Dashboard
-        </button>
-
-      </header>
-
-      {/* MAIN */}
-      <main className="task-form-main">
-
-        <div className="task-form-title">
-
-          <div className="page-icon edit-icon">
-            ✎
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
           </div>
 
-          <div>
-            <p className="page-label">
-              TASK MANAGEMENT
-            </p>
-
-            <h2>Edit Task</h2>
-
-            <p>
-              Update your task details and keep your
-              academic work on track.
-            </p>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
           </div>
 
-        </div>
-
-        {/* TASK ID */}
-        <div className="edit-task-id">
-          <span>Task ID</span>
-          <strong>#{id}</strong>
-        </div>
-
-        <form
-          className="task-form-card"
-          onSubmit={handleUpdate}
-        >
-
-          {/* TASK INFORMATION */}
-          <div className="form-section">
-
-            <div className="section-heading">
-              <span className="section-number">
-                01
-              </span>
-
-              <div>
-                <h3>Task Information</h3>
-                <p>
-                  Update the basic information about your task.
-                </p>
-              </div>
-            </div>
-
-            <div className="form-divider"></div>
-
-            <div className="form-group">
-
-              <label htmlFor="title">
-                Task Title <span>*</span>
-              </label>
-
-              <div className="input-with-icon">
-                <span>📝</span>
-
-                <input
-                  id="title"
-                  type="text"
-                  name="title"
-                  placeholder="Example: Complete DSP assignment"
-                  value={task.title}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-            </div>
-
-            <div className="form-group">
-
-              <label htmlFor="description">
-                Description
-              </label>
-
-              <textarea
-                id="description"
-                name="description"
-                value={task.description}
-                onChange={handleChange}
-                rows="5"
-                placeholder="Write a short description of the task..."
-              />
-
-              <small>
-                Add details that will help you complete this task.
-              </small>
-
-            </div>
-
+          <div className="form-group">
+            <label>Due Date</label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              required
+            />
           </div>
 
-          {/* TASK SETTINGS */}
-          <div className="form-section">
-
-            <div className="section-heading">
-              <span className="section-number">
-                02
-              </span>
-
-              <div>
-                <h3>Task Settings</h3>
-                <p>
-                  Update the deadline, priority and current status.
-                </p>
-              </div>
-            </div>
-
-            <div className="form-divider"></div>
-
-            <div className="form-grid">
-
-              {/* DUE DATE */}
-              <div className="form-group">
-
-                <label htmlFor="dueDate">
-                  Due Date <span>*</span>
-                </label>
-
-                <div className="input-with-icon">
-                  <span>📅</span>
-
-                  <input
-                    id="dueDate"
-                    type="date"
-                    name="dueDate"
-                    value={task.dueDate}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-              </div>
-
-              {/* PRIORITY */}
-              <div className="form-group">
-
-                <label htmlFor="priority">
-                  Priority
-                </label>
-
-                <div className="input-with-icon">
-                  <span>🎯</span>
-
-                  <select
-                    id="priority"
-                    name="priority"
-                    value={task.priority}
-                    onChange={handleChange}
-                  >
-                    <option value="LOW">Low</option>
-                    <option value="MEDIUM">Medium</option>
-                    <option value="HIGH">High</option>
-                  </select>
-                </div>
-
-              </div>
-
-              {/* STATUS */}
-              <div className="form-group">
-
-                <label htmlFor="status">
-                  Status
-                </label>
-
-                <div className="input-with-icon">
-                  <span>📌</span>
-
-                  <select
-                    id="status"
-                    name="status"
-                    value={task.status}
-                    onChange={handleChange}
-                  >
-                    <option value="PENDING">Pending</option>
-                    <option value="COMPLETED">Completed</option>
-                  </select>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* TIP */}
-          <div className="form-tip">
-
-            <div className="tip-icon">
-              💡
-            </div>
-
-            <div>
-              <strong>
-                Keep your tasks updated
-              </strong>
-
-              <p>
-                Update the priority, deadline or status
-                whenever your academic schedule changes.
-              </p>
-            </div>
-
-          </div>
-
-          {/* ACTIONS */}
-          <div className="form-actions">
-
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={() => navigate("/dashboard")}
-              disabled={updating}
+          <div className="form-group">
+            <label>Priority</label>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
             >
-              ← Back
-            </button>
-
-            <button
-              type="submit"
-              className="primary-button"
-              disabled={updating}
-            >
-              {updating
-                ? "⏳ Updating..."
-                : "✓ Update Task"}
-            </button>
-
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
           </div>
 
+          <div className="form-group">
+            <label>Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <button type="submit" className="login-button">
+            UPDATE TASK
+          </button>
+
+          <button
+            type="button"
+            className="admin-login-button"
+            onClick={() => navigate("/tasks")}
+          >
+            CANCEL
+          </button>
         </form>
-
-      </main>
-
-      {/* FOOTER */}
-      <footer className="task-form-footer">
-        <span>Student Task Manager</span>
-        <span>•</span>
-        <span>College Mini Project</span>
-      </footer>
-
+      </div>
     </div>
   );
 }

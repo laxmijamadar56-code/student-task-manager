@@ -1,3 +1,4 @@
+import { API_URL } from "./api";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
@@ -14,7 +15,7 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const API = "http://127.0.0.1:8080";
+  const API = API_URL;
 
   useEffect(() => {
     const adminLoggedIn = localStorage.getItem("adminLoggedIn");

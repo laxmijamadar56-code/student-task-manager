@@ -1,3 +1,4 @@
+import { API_URL } from "./api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TaskForm.css";
@@ -39,7 +40,7 @@ function AddTask() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8080/tasks",
+        `${API_URL}/tasks`,
         {
           method: "POST",
           headers: {
